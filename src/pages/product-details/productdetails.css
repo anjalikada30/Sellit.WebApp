@@ -1,0 +1,22 @@
+.core {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    margin: 100px;
+    gap: 100px;
+  }
+  @media (max-width: 992px) {
+    .core {
+      gap: 70px;
+    }
+  }
+  @media (max-width: 768px) {
+    .core {
+      width: unset;
+      margin: unset;
+      flex-direction: column;
+      gap: unset;
+      margin-bottom: 100px;
+    }
+  }
