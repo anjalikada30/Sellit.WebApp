@@ -1,0 +1,108 @@
+.gallery {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.gallery .image img {
+    height: 220px;
+    width: 300px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+@media (max-width: 992px) {
+    .gallery .image img {
+        height: 190px;
+    }
+}
+
+.gallery .thumbnails {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.gallery .thumbnails .img-holder {
+    position: relative;
+    height: 46px;
+    width: 57px;
+    border-radius: 10px;
+}
+
+@media (max-width: 992px) {
+    .gallery .thumbnails .img-holder {
+        height: 37px;
+        width: 40px;
+    }
+}
+
+.gallery .thumbnails img {
+    height: 50px;
+    width: 60px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+@media (max-width: 992px) {
+    .gallery .thumbnails img {
+        height: 40px;
+        width: 45px;
+    }
+}
+
+.gallery .backdrop .backdrop-content {
+    width: 415px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.gallery .backdrop .backdrop-content .image {
+    position: relative;
+}
+
+.gallery .backdrop-content .image .icon-button-prev {
+    position: absolute;
+    left: -21px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.gallery .backdrop-content .image .icon-button-next {
+    position: absolute;
+    right: -21px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.gallery .backdrop .thumbnails {
+    position: relative;
+}
+
+.gallery .backdrop .thumbnails .img-holder-backd {
+    height: 48px;
+    width: 57px;
+    position: relative;
+}
+
+.gallery .backdrop .thumbnails img {
+    height: 50px;
+    width: 60px;
+}
+
+.activated {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 99;
+    border: 3px solid orange;
+    border-radius: 10px;
+    background-color: #e3dfdfab;
+}

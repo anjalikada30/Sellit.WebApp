@@ -68,7 +68,7 @@ export const productsData = {
     "categoryId": "63fdbfe9ff234cee7e00fe3e",
     "type": "string",
     "title": "string",
-    "description": "string",
+    "description": "This is sample description This is sample description This is sample description This is sample description This is sample descriptionThis is sample description This is sample description",
     "orderStatus": 1,
     "bidStatus": 2,
     "createdBy": "63fcf605a381eaf81ee9cbba",

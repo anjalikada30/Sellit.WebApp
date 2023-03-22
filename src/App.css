@@ -1,3 +1,15 @@
 .page-container {
   margin: 3px;
 }
+
+@media (min-width: 769px) {
+  .hide-in-desktop {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .hide-in-mobile {
+    display: none;
+  }
+}

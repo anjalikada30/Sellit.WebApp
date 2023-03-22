@@ -9,6 +9,7 @@
   @media (max-width: 992px) {
     .core {
       gap: 70px;
+      color: rgba(249, 243, 243, 0.979)
     }
   }
   @media (max-width: 768px) {
