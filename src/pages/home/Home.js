@@ -6,6 +6,7 @@ import pendingLogo from '../../assets/pendinglogo.png';
 import completedLogo from '../../assets/completedlogo.png';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Link } from 'react-router-dom';
+import { NoBid } from '../../components';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "#a8bfed",
@@ -52,9 +53,9 @@ const Home = () => {
             <Box sx={{
                 flexGrow: 1,
                 p: 1,
-                margin: 3
+                margin: 2
             }}>
-                <Box sx={{
+                {/* <Box sx={{
                     flexGrow: 1,
                     p: 1,
                     display: { xs: 'none', sm: 'block', md: 'block' }
@@ -93,7 +94,8 @@ const Home = () => {
                             <BidCard name="Cancelled Bids" logo={cancelledLogo} link="/cancelled-bids"/>
                         </Item>
                     </Grid>
-                </Grid>
+                </Grid> */}
+                <NoBid />
             </Box>
         </>
     )

@@ -9,4 +9,4 @@ export { ProductImages } from './product-images';
 export { ProductDescription } from './product-description';
 export { HorizontalStepper } from './product-horizontal-stepper';
 export { VerticalStepper } from './product-vertical-stepper';
-
+export { NoBid } from './no-bid';

@@ -8,7 +8,7 @@ const ProductDescription = ({ data }) => {
                 <Typography gutterBottom variant="subtitle1" component="div" fontWeight='bold' fontSize={"2rem"}>
                     {data.title}
                 </Typography>
-                <Typography variant="body2" gutterBottom fontSize='1rem' width={"40vw"}>
+                <Typography variant="body2" gutterBottom fontSize='0.9rem' width={"40vw"}>
                     {data.description}
                 </Typography>
             </Grid>

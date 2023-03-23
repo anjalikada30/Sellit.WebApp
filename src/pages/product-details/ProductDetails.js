@@ -11,13 +11,8 @@ import image1 from '../../assets/image1.png';
 import image2 from '../../assets/image2.png';
 import image3 from '../../assets/image3.png';
 import image4 from '../../assets/image4.png';
+import BidDetails from '../../components/bid-details/BidDetails';
 
-const ProductBidStatus = {
-    1: "Created",
-    2: "Accepted",
-    3: "Rejected",
-    4: "Modified",
-};
 
 const steps = [
     'Select master blaster campaign settings',
@@ -64,10 +59,7 @@ const ProductDetails = () => {
                     </Button>
                 </Grid>
                 <Grid item>
-                    <Typography gutterBottom variant="subtitle1" component="div">
-                        Bid Status:
-                        <Button variant="contained" color='primary' sx={{ m: 1, cursor: 'default', width: '120px' }}>{ProductBidStatus[data.bidStatus]}</Button>
-                    </Typography>
+                    <BidDetails data={data} />
                 </Grid>
             </Grid>
             <Grid container spacing={4} sx={{
@@ -82,8 +74,8 @@ const ProductDetails = () => {
                 </Grid>
             </Grid>
             <Box sx={{ width: '100%', m: 2 }}>
-                {/* <HorizontalStepper steps={steps} /> */}
-                <VerticalStepper steps={steps} />
+                <HorizontalStepper steps={steps} />
+                {/* <VerticalStepper steps={steps} /> */}
             </Box>
         </Box>
     )

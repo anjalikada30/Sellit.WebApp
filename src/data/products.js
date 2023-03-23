@@ -70,7 +70,7 @@ export const productsData = {
     "title": "string",
     "description": "This is sample description This is sample description This is sample description This is sample description This is sample descriptionThis is sample description This is sample description",
     "orderStatus": 1,
-    "bidStatus": 2,
+    "bidStatus": 1,
     "createdBy": "63fcf605a381eaf81ee9cbba",
     "pickupAddress": "string",
     "images": [

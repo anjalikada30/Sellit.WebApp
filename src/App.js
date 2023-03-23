@@ -15,6 +15,7 @@ const PendingBidsComponent = React.lazy(() => import('./pages/pending-bids/Pendi
 const CancelledBidsComponent = React.lazy(() => import('./pages/cancelled-bids/CancelledBids'));
 const BookmarksComponent = React.lazy(() => import('./pages/bookmarks/Bookmarks.js'));
 const ProductDetailsComponent = React.lazy(() => import('./pages/product-details/ProductDetails.js'));
+const UserProfileComponent = React.lazy(() => import('./pages/user-profile/UserProfile'));
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
               <Route path='/cancelled-bids' element={<CancelledBidsComponent />} />
               <Route path='/bookmarks' element={<BookmarksComponent />} />
               <Route path='/product/:id' element={<ProductDetailsComponent />} />
+              <Route path='/user-profile' element={<UserProfileComponent />} />
             </Routes>
           </Suspense>
         </div>
