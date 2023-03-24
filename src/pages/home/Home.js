@@ -55,7 +55,7 @@ const Home = () => {
                 p: 1,
                 margin: 2
             }}>
-                {/* <Box sx={{
+                <Box sx={{
                     flexGrow: 1,
                     p: 1,
                     display: { xs: 'none', sm: 'block', md: 'block' }
@@ -94,8 +94,8 @@ const Home = () => {
                             <BidCard name="Cancelled Bids" logo={cancelledLogo} link="/cancelled-bids"/>
                         </Item>
                     </Grid>
-                </Grid> */}
-                <NoBid />
+                </Grid>
+                {/* <NoBid /> */}
             </Box>
         </>
     )

@@ -5,7 +5,10 @@ const SignupStep3 = ({
     formValues,
     handleSignup,
     handleBack,
-    handleChange
+    handleChange,
+    action,
+    handleClose,
+    handleEdit
 }) => {
     const { bankAccountNumber, ifscCode, accountHolderName, UPI } = formValues;
     const margin = "normal";
@@ -86,16 +89,47 @@ const SignupStep3 = ({
                 </Grid>
             </Grid>
             <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
-                <Button onClick={handleBack} sx={{ mr: 1 }}>
-                    Back
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSignup}
-                >
-                    Signup 
-                </Button>
+                {
+                    action !== 'edit' ?
+                        <Button onClick={handleBack} sx={{ mr: 1 }}>
+                            Back
+                        </Button> : null
+                }
+                {
+                    action !== 'edit' ?
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleSignup}
+                        >
+                            Signup
+                        </Button> : null
+                }
+
+                {
+                    action === 'edit' ?
+                        <Button
+                            variant="contained"
+                            sx={{ mt: 3, ml: 1 }}
+                            //disabled={isError()}
+                            color="primary"
+                            //onClick={!isError() ? handleEdit : () => null}
+                            onClick={handleEdit}
+                        >
+                            Edit
+                        </Button> : null
+                }
+                {
+                    action === 'edit' ?
+                        <Button
+                            variant="outlined"
+                            sx={{ mt: 3, ml: 1 }}
+                            color="error"
+                            onClick={handleClose}
+                        >
+                            Close
+                        </Button> : null
+                }
             </Box>
         </>
     )

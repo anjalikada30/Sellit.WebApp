@@ -7,7 +7,10 @@ const SignupStep1 = ({
     formValues,
     handleNext,
     handleBack,
-    handleChange
+    handleChange,
+    action,
+    handleClose,
+    handleEdit
 }) => {
     const { name, email, mobile, addressLine1, landmark, zipCode, city, state, country } = formValues;
     const margin = "normal";
@@ -25,7 +28,7 @@ const SignupStep1 = ({
     return (
         <>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={6} sx={{pt: "5px"}}>
+                <Grid item xs={12} sm={6} sx={{ pt: "5px" }}>
                     <TextField
                         variant={variant}
                         margin={margin}
@@ -59,24 +62,26 @@ const SignupStep1 = ({
                         required={email.required}
                     />
                 </Grid>
-
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        variant={variant}
-                        margin={margin}
-                        fullWidth
-                        label="Phone Number"
-                        name="mobile"
-                        placeholder="Your phone number"
-                        type="mobile"
-                        size='small'
-                        value={mobile.value}
-                        onChange={handleChange}
-                        error={!!mobile.error}
-                        helperText={mobile.error}
-                        required={mobile.required}
-                    />
-                </Grid>
+                {
+                    action !== 'edit' ?
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                variant={variant}
+                                margin={margin}
+                                fullWidth
+                                label="Phone Number"
+                                name="mobile"
+                                placeholder="Your phone number"
+                                type="mobile"
+                                size='small'
+                                value={mobile.value}
+                                onChange={handleChange}
+                                error={!!mobile.error}
+                                helperText={mobile.error}
+                                required={mobile.required}
+                            />
+                        </Grid> : null
+                }
 
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -197,15 +202,41 @@ const SignupStep1 = ({
             </Grid>
 
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button
-                    variant="contained"
-                    sx={{ mt: 3, ml: 1 }}
-                    disabled={isError()}
-                    color="primary"
-                    onClick={!isError() ? handleNext : () => null}
-                >
-                    Next
-                </Button>
+                {
+                    action !== 'edit' ?
+                        <Button
+                            variant="contained"
+                            sx={{ mt: 3, ml: 1 }}
+                            disabled={isError()}
+                            color="primary"
+                            onClick={!isError() ? handleNext : () => null}
+                        >
+                            Next
+                        </Button> : null
+                }
+                {
+                    action === 'edit' ?
+                        <Button
+                            variant="contained"
+                            sx={{ mt: 3, ml: 1 }}
+                            disabled={isError()}
+                            color="primary"
+                            onClick={!isError() ? handleEdit : () => null}
+                        >
+                            Edit
+                        </Button> : null
+                }
+                {
+                    action === 'edit' ?
+                        <Button
+                            variant="outlined"
+                            sx={{ mt: 3, ml: 1 }}
+                            color="error"
+                            onClick={handleClose}
+                        >
+                            Close
+                        </Button> : null
+                }
             </Box>
         </>
     )

@@ -1,22 +1,31 @@
 .profile-item {
-    width: 200px;
-    display: inline-block;
-    font-size: 0.9rem;
+  width: 200px;
+  display: inline-block;
+  font-size: 0.9rem;
+}
+
+.profile-value {
+  font-size: 0.9rem;
 }
 
 @media (max-width: 400px) {
-    .profile-item {
-      width: 130px;
-    }
+  .profile-item {
+    width: 110px;
+    font-size: 0.8rem;
   }
 
-.edit-mobile {
-    font-size: small;
-    margin-left: 10px;
+  .profile-value {
+    font-size: 0.8rem;
+  }
 }
 
 .edit-mobile {
-    padding-left: 5px;
-    padding-right: 5px;
-    margin-bottom: 5px;
+  font-size: small;
+  margin-left: 10px;
+}
+
+.edit-mobile {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-bottom: 5px;
 }

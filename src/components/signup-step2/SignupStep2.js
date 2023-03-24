@@ -6,7 +6,10 @@ const SignupStep2 = ({
     formValues,
     handleNext,
     handleBack,
-    handleChange
+    handleChange,
+    action,
+    handleClose,
+    handleEdit
 }) => {
     const { identityProofType, identityProofNumber, identityProofImageUri } = formValues;
     const margin = "normal";
@@ -21,10 +24,11 @@ const SignupStep2 = ({
             ),
         [identityProofType, identityProofNumber, identityProofImageUri]
     );
+    
     return (
         <>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={7} sx={{ pt: "5px" }}>
+                <Grid item xs={12} sm={9} sx={{ pt: "5px" }}>
                     <TextField
                         variant={variant}
                         margin={margin}
@@ -52,7 +56,7 @@ const SignupStep2 = ({
                 </Grid>
                 {
                     identityProofType.value ?
-                        <Grid item xs={12} sm={7}>
+                        <Grid item xs={12} sm={9}>
                             <TextField
                                 variant={variant}
                                 margin={margin}
@@ -85,24 +89,54 @@ const SignupStep2 = ({
                                     hidden
                                 />
                             </Button>
-                            <Typography variant='span' sx={{ml: 1}}>
+                            <Typography variant='span' sx={{ ml: 1 }}>
                                 {formValues.identityProofImageUri.value?.name}
                             </Typography>
                         </Grid> : null
                 }
             </Grid>
-            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
-                <Button onClick={handleBack} sx={{ mr: 1 }}>
-                    Back
-                </Button>
-                <Button
-                    variant="contained"
-                    disabled={isError()}
-                    color="primary"
-                    onClick={!isError() ? handleNext : () => null}
-                >
-                    Next
-                </Button>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+                {
+                    action === 'edit' ?
+                        <Button
+                            variant="contained"
+                            sx={{ mt: 3, ml: 1 }}
+                            disabled={isError()}
+                            color="primary"
+                            onClick={!isError() ? handleEdit : () => null}
+                        >
+                            Edit
+                        </Button> : null
+                }
+                {
+                    action === 'edit' ?
+                        <Button
+                            variant="outlined"
+                            sx={{ mt: 3, ml: 1 }}
+                            color="error"
+                            onClick={handleClose}
+                        >
+                            Close
+                        </Button> : null
+                }
+                {
+                    action !== 'edit' ?
+                        <Button onClick={handleBack} sx={{ mr: 1 }}>
+                            Back
+                        </Button> : null
+                }
+                {
+                    action !== 'edit' ?
+                        <Button
+                            variant="contained"
+                            disabled={isError()}
+                            color="primary"
+                            onClick={!isError() ? handleNext : () => null}
+                        >
+                            Next
+                        </Button> : null
+                }
+
             </Box>
         </>
     )
