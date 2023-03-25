@@ -1,19 +1,20 @@
 import React from 'react';
-import { Grid, Paper, Box, Avatar, TextField, Button, Typography, Link, Alert } from '@mui/material'
+import { Grid, Paper, Box, Avatar, TextField, Button, Typography, Link, Alert, Snackbar } from '@mui/material'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { verifyOtp } from '../../store/actions/auth';
+import { verifyOtp, resendOtp } from '../../store/actions/auth';
 import { Loader } from '../../components';
 
 const VerifyOtp = () => {
-    const paperStyle = { padding: 20, height: '70vh', width: 280, margin: "60px auto" }
+    const paperStyle = { padding: 20, height: '55vh', width: 280, margin: "60px auto" }
     const [user, setUser] = useState({
         otp: "",
 
     });
     const [validationError, setValidationError] = useState();
     const [loading, setLoading] = useState(false)
+    const [snackDetails, setSnackDetails] = useState({})
     let navigate = useNavigate();
     const { userId, mobile } = useSelector(state => state.auth);
     const { otpmessage } = useSelector(state => state.message);
@@ -48,7 +49,32 @@ const VerifyOtp = () => {
             counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
         return () => clearInterval(timer);
     }, [counter]);
-    
+
+    const handleResendOtp = () => {
+        setLoading(true)
+        dispatch(resendOtp({
+            userId: userId
+        }))
+            .then((response) => {
+                setLoading(false)
+                setSnackDetails({
+                    show: true,
+                    severity: 'success',
+                    message: response.message
+                })
+                setCounter(59)
+            })
+            .catch((error) => {
+                setLoading(false)
+            })
+    }
+    const handleSnackClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackDetails({});
+    };
     return (
         <>
             <Grid>
@@ -83,7 +109,7 @@ const VerifyOtp = () => {
                         />
                         {
                             otpmessage ?
-                                <Alert severity="error" sx={{marginTop: 1}}>
+                                <Alert severity="error" sx={{ marginTop: 1 }}>
                                     {otpmessage}
                                 </Alert> : null
                         }
@@ -96,24 +122,39 @@ const VerifyOtp = () => {
                             Verify
                         </Button>
                     </form>
-                    <Box mt={3} >
-                        <Typography fontWeight={500} align="center" color='textSecondary'>
-                            Resend OTP in <span style={{ color: "green", fontWeight: "bold" }}> 00:{counter}</span>
-                        </Typography>
-                    </Box>
-
-                    <Typography align="center">
-                        <Link to="Signup">
-                            <span style={{ marginLeft: "5px" }}> Resend OTP </span>
-                        </Link>
-                    </Typography>
-
+                    {
+                        counter !== 0 ?
+                            <Box mt={1} >
+                                <Typography fontWeight={500} align="center" color='textSecondary'>
+                                    Resend OTP in <span style={{ color: "green", fontWeight: "bold" }}> 00:{counter}</span>
+                                </Typography>
+                            </Box> : null
+                    }
+                    {
+                        counter === 0 ?
+                            <Typography align="center">
+                                <Button variant="text" onClick={handleResendOtp}>Resend OTP</Button>
+                                {/* <Link to="Signup">
+                                    <span style={{ marginLeft: "5px" }}> Resend OTP </span>
+                                </Link> */}
+                            </Typography> : null
+                    }
                 </Paper>
             </Grid>
             {
                 loading ?
                     <Loader /> : null
             }
+            <Snackbar open={snackDetails.show}
+                autoHideDuration={6000}
+                onClose={handleSnackClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert onClose={handleSnackClose} severity={snackDetails.severity}
+                    sx={{ width: '100%' }}>
+                    {snackDetails.message}
+                </Alert>
+            </Snackbar>
         </>
     )
 }

@@ -5,6 +5,7 @@ import Divider from '@mui/material/Divider';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Checkbox from '@mui/material/Checkbox';
+import userService from '../../services/user.service';
 
 function Filter() {
     const [categories, setCategories] = useState([])
@@ -18,14 +19,10 @@ function Filter() {
     }, [])
     
     const fetchCategories = async () => {
-        const response = await axios.get('https://sell-it.onrender.com/api/v1/products/categories', {
-            headers: {
-                Authorization: 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2ZjZjYwNWEzODFlYWY4MWVlOWNiYmEiLCJyb2xlIjoyLCJpYXQiOjE2NzkyMjAzNTYsImV4cCI6MTY3OTgyNTE1Nn0.1ke2VBz2mp877MYO27VnyhjnE10smSP3EoHW7_9ck0k'
-            }
-        })
+        const response = await userService.getCategories();
         setCategories(response?.data?.response?.categories)
     }
-    console.log(categories)
+    
     const handlePriceRangeChange = (event, newValue) => {
         setPriceRangeValue(newValue);
     };

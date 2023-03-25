@@ -4,6 +4,7 @@ import { Header, Loader } from './components';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from "react-redux";
 import store from './store/store';
+import Protected from './ProtectedRoute';
 
 const LoginComponent = React.lazy(() => import('./pages/login/Login'));
 const VerifyOtpComponent = React.lazy(() => import('./pages/verify-otp/VerifyOtp'));
@@ -27,15 +28,55 @@ function App() {
             <Routes>
               <Route path='/' element={<LoginComponent />} />
               <Route path='/verify-otp' element={<VerifyOtpComponent />} />
-              <Route path='/home' element={<HomeComponent />} />
+              <Route path='/home'
+                element={
+                  <Protected>
+                    <HomeComponent />
+                  </Protected>}
+              />
               <Route path='/sign-up' element={<SignupComponent />} />
-              <Route path='/all-bids' element={<AllBidsComponent />} />
-              <Route path='/completed-bids' element={<CompletedBidsComponent />} />
-              <Route path='/pending-bids' element={<PendingBidsComponent />} />
-              <Route path='/cancelled-bids' element={<CancelledBidsComponent />} />
-              <Route path='/bookmarks' element={<BookmarksComponent />} />
-              <Route path='/product/:id' element={<ProductDetailsComponent />} />
-              <Route path='/user-profile' element={<UserProfileComponent />} />
+              <Route path='/all-bids'
+                element={
+                  <Protected>
+                    <AllBidsComponent />
+                  </Protected>}
+              />
+              <Route path='/completed-bids'
+                element={
+                  <Protected>
+                    <CompletedBidsComponent />
+                  </Protected>}
+              />
+              <Route path='/pending-bids'
+                element={
+                  <Protected>
+                    <PendingBidsComponent />
+                  </Protected>}
+              />
+              <Route path='/cancelled-bids'
+                element={
+                  <Protected>
+                    <CancelledBidsComponent />
+                  </Protected>}
+              />
+              <Route path='/bookmarks'
+                element={
+                  <Protected>
+                    <BookmarksComponent />
+                  </Protected>}
+              />
+              <Route path='/product/:id'
+                element={
+                  <Protected>
+                    <ProductDetailsComponent />
+                  </Protected>}
+              />
+              <Route path='/user-profile'
+                element={
+                  <Protected>
+                    <UserProfileComponent />
+                  </Protected>}
+              />
             </Routes>
           </Suspense>
         </div>

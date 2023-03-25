@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './productdetails.css';
 import { Box, Button, Grid, Step, StepLabel, Stepper, Typography } from '@mui/material'
 import { product } from '../../data/products'
@@ -12,6 +12,7 @@ import image2 from '../../assets/image2.png';
 import image3 from '../../assets/image3.png';
 import image4 from '../../assets/image4.png';
 import BidDetails from '../../components/bid-details/BidDetails';
+import userService from '../../services/user.service';
 
 
 const steps = [
@@ -45,6 +46,23 @@ const images = [
 
 const ProductDetails = () => {
     const data = { ...product };
+    const [productdetails, setProductdetails] = useState({})
+    const [loading, setLoading] = useState(false)
+    useEffect(()=>{
+        fetchProductDetails();
+    }, [])
+    const fetchProductDetails = async ()=>{
+        setLoading(true)
+        try {
+            const id = window.location.href.split('/')[4]
+            const response = await userService.getProductDetails(id)
+            setLoading(false)
+            console.log('productDetails-', response)
+            //setProducts(response?.data?.response?.products?.results)
+        } catch (err) {
+            setLoading(false)
+        }
+    }
     return (
         <Box sx={{ m: 2, pb: 4, backgroundColor: "#d3d3d347" }}>
             <Grid container sx={{

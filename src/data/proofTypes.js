@@ -1,10 +1,10 @@
 export const proofTypes = [
     {
-        "code": "AA",
+        "code": 2,
         "name": "Aadhar Number"
     },
     {
-        "code": "PAN",
+        "code": 1,
         "name": "Permanent Account Number(PAN)"
     }
 ]

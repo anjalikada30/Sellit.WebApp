@@ -7,12 +7,17 @@ import {
   LOGIN1_SUCCESS,
   LOGIN2_SUCCESS,
   SET_OTP_MESSAGE,
+  SET_SIGNUP_MESSAGE,
+  CLEAR_SIGNUP_MESSAGE,
 } from "./types";
 
 import AuthService from "../../services/auth.service";
 import { ERROR_RESPONSE, SUCCESS_RESPONSE } from "../../data/constants";
 
 export const register = (data) => (dispatch) => {
+  dispatch({
+    type: CLEAR_SIGNUP_MESSAGE
+  });
   return AuthService.register(data).then(
     (response) => {
       if (response.status === SUCCESS_RESPONSE) {
@@ -27,7 +32,7 @@ export const register = (data) => (dispatch) => {
         });
 
         dispatch({
-          type: SET_MESSAGE,
+          type: SET_SIGNUP_MESSAGE,
           payload: response.error,
         });
 
@@ -48,7 +53,10 @@ export const login = (mobile) => (dispatch) => {
             mobile: mobile
           },
         });
-
+        dispatch({
+          type: SET_OTP_MESSAGE,
+          payload: null,
+        });
         return Promise.resolve();
       } else if (response.status === ERROR_RESPONSE) {
         dispatch({
@@ -89,6 +97,20 @@ export const verifyOtp = (data) => (dispatch) => {
         });
 
         return Promise.reject();
+      }
+    }
+  );
+};
+
+export const resendOtp = (data) => (dispatch) => {
+  return AuthService.resendOtp(data).then(
+    (response) => {
+      if (response.status === SUCCESS_RESPONSE) {
+        return Promise.resolve({
+            message: "OTP sent successfully!"
+        });
+      } else if (response.status === ERROR_RESPONSE) {
+        return Promise.reject({message: response.error});
       }
     }
   );

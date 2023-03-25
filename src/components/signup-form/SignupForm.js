@@ -1,4 +1,4 @@
-import { Box, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import { Box, Grid, Link, Step, StepLabel, Stepper, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../../store/actions/auth';
@@ -104,11 +104,17 @@ const initialValues = {
         required: true,
         validate: 'image'
     },
+    bankType: {
+        value: '',
+        error: '',
+        required: true,
+        validate: 'select'
+    },
     bankAccountNumber: {
         value: '',
         error: '',
         required: false,
-        validate: 'text',
+        validate: 'bankacc',
         minLength: 3,
         maxLength: 20
     },
@@ -116,7 +122,7 @@ const initialValues = {
         value: '',
         error: '',
         required: false,
-        validate: 'text',
+        validate: 'ifsc',
         minLength: 3,
         maxLength: 20
     },
@@ -132,7 +138,7 @@ const initialValues = {
         value: '',
         error: '',
         required: false,
-        validate: 'text',
+        validate: 'upi',
         minLength: 3,
         maxLength: 20
     },
@@ -154,17 +160,29 @@ const SignupForm = () => {
     const isNumber = /^\d+$/;
     const isAadharNumber = /^[2-9]{1}[0-9]{3}\s{1}[0-9]{4}\s{1}[0-9]{4}$/;
     const isPan = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/;
+    const isBankAccNum = /^\d{9,18}$/;
+    const isIfsccode = /^[A-Za-z]{4}[a-zA-Z0-9]{7}$/;
+    const isUpi = /[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}/;
 
     // Proceed to next step
     const handleNext = useCallback(() => setActiveStep(activeStep + 1), [activeStep]);
     // Go back to prev step
     const handleBack = useCallback(() => setActiveStep(activeStep - 1), [activeStep]);
 
-    const handleChange = (event, image) => {
+    const handleChange = (event, image, imageurl) => {
+        if (imageurl) {
+            setFormValues({
+                ...formValues,
+                identityProofImageUri: {
+                    ...formValues['identityProofImageUri'],
+                    value: imageurl
+                }
+            })
+            return;
+        }
         let { type, name, value } = event.target;
         if (image) name = "identityProofImageUri";
         const fieldValue = !image ? value : event.target.files[0];
-        console.log(name, fieldValue)
         const fieldName = initialValues[name];
         if (!fieldName) return;
 
@@ -217,7 +235,7 @@ const SignupForm = () => {
                     break;
 
                 case "proof":
-                    if (formValues.identityProofType.value === "AA") {
+                    if (Number(formValues.identityProofType.value) === 2) {
                         if (value && !isAadharNumber.test(value))
                             error = helperText || "Please enter a valid aadhar number. i.e: XXXX XXXX XXXX";
                     } else {
@@ -228,6 +246,21 @@ const SignupForm = () => {
 
                 case "image":
                     if (!value) error = helperText || "Please select an image.";
+                    break;
+
+                case "bankacc":
+                    if (value && !isBankAccNum.test(value))
+                        error = helperText || "Please enter a valid account number.";
+                    break;
+
+                case "ifsc":
+                    if (value && !isIfsccode.test(value))
+                        error = helperText || "Please enter a valid ifsc code.";
+                    break;
+                    
+                case "upi":
+                    if (value && !isUpi.test(value))
+                        error = helperText || "Please enter a valid upi id.";
                     break;
 
                 default:
@@ -245,21 +278,32 @@ const SignupForm = () => {
     }
 
     const handleSignup = () => {
-        const data = {
+        let data = {
             "name": formValues.name.value,
             "email": formValues.email.value,
             "mobile": formValues.mobile.value,
+            "identityProofType": formValues.identityProofType.value,
             "identityProofNumber": formValues.identityProofNumber.value,
-            "identityProofImageUri": "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg",
+            "identityProofImageUri": formValues.identityProofImageUri.value,
             "addressLine1": formValues.addressLine1.value,
             "landmark": formValues.landmark.value,
             "city": formValues.city.value,
             "state": formValues.state.value,
             "zipCode": formValues.zipCode.value,
-            "country": formValues.country.value,
-            "bankAccountNumber": formValues.bankAccountNumber.value,
-            "ifscCode": formValues.ifscCode.value,
-            "accountHolderName": formValues.accountHolderName.value
+            "country": formValues.country.value
+        }
+        if (formValues.bankType?.value === "1") {
+            data = {
+                ...data,
+                "bankAccountNumber": formValues.bankAccountNumber.value,
+                "ifscCode": formValues.ifscCode.value,
+                "accountHolderName": formValues.accountHolderName.value
+            }
+        } else {
+            data = {
+                ...data,
+                "UPI": formValues.UPI.value,
+            }
         }
         setLoading(true)
         dispatch(register({ ...data }))
@@ -313,6 +357,13 @@ const SignupForm = () => {
                     </Stepper>
 
                     {handleSteps()}
+                    <Grid container>
+                        <Grid item>
+                            <Link href="/" variant="body2">
+                                {"Already have an account? Sign in"}
+                            </Link>
+                        </Grid>
+                    </Grid>
                 </>
             )}
             {

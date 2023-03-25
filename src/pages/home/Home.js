@@ -1,12 +1,13 @@
 import { Box, Button, Grid, Paper, styled, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import allBidsLogo from '../../assets/allbidslogo.png';
 import cancelledLogo from '../../assets/cancelledlogo.png';
 import pendingLogo from '../../assets/pendinglogo.png';
 import completedLogo from '../../assets/completedlogo.png';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Link } from 'react-router-dom';
-import { NoBid } from '../../components';
+import { Loader, NoBid } from '../../components';
+import UserService from '../../services/user.service'
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "#a8bfed",
@@ -17,8 +18,10 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Home = () => {
+    const [loading, setLoading] = useState(false)
+    const [products, setProducts] = useState([]);
     const paperStyle = { padding: 20, height: '15vh', width: "95%", margin: "5px" }
-    const BidCard = ({name, logo, link}) => {
+    const BidCard = ({ name, logo, link }) => {
         return (
             <Grid container spacing={1} sx={{
                 display: 'flex',
@@ -48,6 +51,19 @@ const Home = () => {
             </Grid>
         )
     }
+    useEffect(() => {
+        fetchAllProducts()
+    }, [])
+    const fetchAllProducts = async () => {
+        setLoading(true)
+        try {
+            const response = await UserService.getAllProducts()
+            setLoading(false)
+            setProducts(response?.data?.response?.products?.results)
+        } catch (err) {
+            setLoading(false)
+        }
+    }
     return (
         <>
             <Box sx={{
@@ -55,48 +71,57 @@ const Home = () => {
                 p: 1,
                 margin: 2
             }}>
-                <Box sx={{
-                    flexGrow: 1,
-                    p: 1,
-                    display: { xs: 'none', sm: 'block', md: 'block' }
-                }}>
+                {
+                    products.length ?
+                        <>
+                            <Box sx={{
+                                flexGrow: 1,
+                                p: 1,
+                                display: { xs: 'none', sm: 'block', md: 'block' }
+                            }}>
 
-                    <Typography variant='h6' sx={{ mb: 4 }}>Latest Bid</Typography>
-                    <Paper elevation={2} style={paperStyle} >
+                                <Typography variant='h6' sx={{ mb: 4 }}>Latest Bid</Typography>
+                                <Paper elevation={2} style={paperStyle} >
 
-                    </Paper>
-                </Box>
-                <Typography variant='h6' sx={{ mt: 2 }}>All Bids</Typography>
-                <Grid container spacing={2} sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    mt: 4
-                }}
-                >
-                    <Grid item xs={12} sm={6} md={5}>
-                        <Item>
-                            <BidCard name="All Bids" logo={allBidsLogo} link="/all-bids"/>
-                        </Item>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={5}>
-                        <Item>
-                            <BidCard name="Pending Bids" logo={pendingLogo} link="/pending-bids"/>
-                        </Item>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={5}>
-                        <Item>
-                            <BidCard name="Completed Bids" logo={completedLogo} link="/completed-bids"/>
-                        </Item>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={5}>
-                        <Item>
-                            <BidCard name="Cancelled Bids" logo={cancelledLogo} link="/cancelled-bids"/>
-                        </Item>
-                    </Grid>
-                </Grid>
-                {/* <NoBid /> */}
+                                </Paper>
+                            </Box>
+                            <Typography variant='h6' sx={{ mt: 2 }}>All Bids</Typography>
+                            <Grid container spacing={2} sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                mt: 4
+                            }}
+                            >
+                                <Grid item xs={12} sm={6} md={5}>
+                                    <Item>
+                                        <BidCard name="All Bids" logo={allBidsLogo} link="/all-bids" />
+                                    </Item>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={5}>
+                                    <Item>
+                                        <BidCard name="Pending Bids" logo={pendingLogo} link="/pending-bids" />
+                                    </Item>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={5}>
+                                    <Item>
+                                        <BidCard name="Completed Bids" logo={completedLogo} link="/completed-bids" />
+                                    </Item>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={5}>
+                                    <Item>
+                                        <BidCard name="Cancelled Bids" logo={cancelledLogo} link="/cancelled-bids" />
+                                    </Item>
+                                </Grid>
+                            </Grid>
+                        </> :
+                        <NoBid />
+                }
             </Box>
+            {
+                loading ?
+                    <Loader /> : null
+            }
         </>
     )
 }

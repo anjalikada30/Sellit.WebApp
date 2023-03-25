@@ -6,9 +6,10 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import sampleProduct from '../../assets/sampleproduct.png';
-import { Box, Button, IconButton, Link } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import { Link } from 'react-router-dom';
 
 const Img = styled('img')({
     margin: 'auto',
@@ -36,7 +37,7 @@ const ProductListItem = ({ data }) => {
                     </ButtonBase>
                 </Grid>
                 <Grid item xs={12} sm container>
-                    <Grid item xs container direction="column" spacing={2} sx={{mb: 1}}>
+                    <Grid item xs container direction="column" spacing={2} sx={{ mb: 1 }}>
                         <Grid item xs>
                             <Box sx={{ width: '200px', height: '30px', overflow: 'hidden' }}>
                                 <Typography gutterBottom variant="subtitle1" component="div" fontWeight='bold'>
@@ -50,16 +51,16 @@ const ProductListItem = ({ data }) => {
                             </Box>
                         </Grid>
                         <Grid item >
-                            <Link href={`/product/${data._id}`} variant="body2">
+                            <Button variant="text" component={Link} to={`/product/${data._id}`} >
                                 {"View Details"}
-                            </Link>
+                            </Button>
                         </Grid>
                     </Grid>
-                    <Grid item xs container direction="column" spacing={2} sx={{mt: 1}}>
+                    <Grid item xs container direction="column" spacing={2} sx={{ mt: 1 }}>
                         {
                             data.acceptedAmount ?
-                            <Button variant="outlined" color='success' sx={{ m: 1, cursor: 'default', width: '120px' }}>Completed</Button> : 
-                            <Button variant="outlined" color='error' sx={{ m: 1, cursor: 'default', width: '120px' }}>Pending</Button>
+                                <Button variant="outlined" color='success' sx={{ m: 1, cursor: 'default', width: '120px' }}>Completed</Button> :
+                                <Button variant="outlined" color='error' sx={{ m: 1, cursor: 'default', width: '120px' }}>Pending</Button>
                         }
                         {
                             data.acceptedAmount ?

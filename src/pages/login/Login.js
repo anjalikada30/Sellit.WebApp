@@ -46,17 +46,18 @@ function Login() {
         mobile: ""
     });
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
     let navigate = useNavigate();
     const { isLoggedIn } = useSelector(state => state.auth);
     const { message } = useSelector(state => state.message);
     const dispatch = useDispatch();
 
     const handleChange = name => event => {
+        setError(!mobileregex.test(event.target.value))
         setValues({ ...values, [name]: event.target.value });
     };
 
     const mobileregex = /^[5-9]\d{9}$/gi;
-    const error = !mobileregex.test(values.mobile);
 
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
