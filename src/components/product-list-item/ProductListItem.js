@@ -17,13 +17,30 @@ const Img = styled('img')({
     maxWidth: '100%',
     maxHeight: '100%',
 });
-
-const ProductListItem = ({ data }) => {
+const ProductBidStatus = {
+    1 : 'CREATED',
+    2 : 'ACCEPTED',
+    3 : 'REJECTED',
+    4 : 'MODIFIED'
+};
+const ProductBidColor = {
+    1 : 'primary',
+    2 : 'success',
+    3 : 'error',
+    4 : 'primary'
+};
+const OrderStatus = {
+    1 : 'Pending',
+    2 : 'Picked up date estimated',
+    3 : 'Picked up',
+    4 : 'Paid'
+  };
+const ProductListItem = ({ data, margin }) => {
     return (
         <Paper
             sx={{
                 p: 2,
-                margin: 'auto',
+                margin: margin ? 1:'auto',
                 maxWidth: 500,
                 flexGrow: 1,
                 backgroundColor: (theme) =>
@@ -39,7 +56,7 @@ const ProductListItem = ({ data }) => {
                 <Grid item xs={12} sm container>
                     <Grid item xs container direction="column" spacing={2} sx={{ mb: 1 }}>
                         <Grid item xs>
-                            <Box sx={{ width: '200px', height: '30px', overflow: 'hidden' }}>
+                            <Box sx={{ width: '180px', height: '30px', overflow: 'hidden' }}>
                                 <Typography gutterBottom variant="subtitle1" component="div" fontWeight='bold'>
                                     {data.title}
                                 </Typography>
@@ -51,23 +68,24 @@ const ProductListItem = ({ data }) => {
                             </Box>
                         </Grid>
                         <Grid item >
-                            <Button variant="text" component={Link} to={`/product/${data._id}`} >
+                            <Button variant="text" component={Link} to={`/product/${data._id}`}>
                                 {"View Details"}
                             </Button>
                         </Grid>
                     </Grid>
                     <Grid item xs container direction="column" spacing={2} sx={{ mt: 1 }}>
+                        <Button variant="outlined" color={ProductBidColor[data.bidStatus]}
+                            sx={{ m: 1, cursor: 'default', width: '120px' }}>
+                            {ProductBidStatus[data.bidStatus]}</Button>
                         {
-                            data.acceptedAmount ?
-                                <Button variant="outlined" color='success' sx={{ m: 1, cursor: 'default', width: '120px' }}>Completed</Button> :
-                                <Button variant="outlined" color='error' sx={{ m: 1, cursor: 'default', width: '120px' }}>Pending</Button>
-                        }
-                        {
-                            data.acceptedAmount ?
+                            data.bidStatus === 2 ?
                                 <Typography variant="subtitle1" component="div" sx={{ fontSize: '0.8rem' }}>
                                     Accepted amount: {data.acceptedAmount}
                                 </Typography> : null
                         }
+                        <Typography variant="subtitle1" component="div" sx={{ fontSize: '0.8rem' }}>
+                                    Order status: {OrderStatus[data.orderStatus]}
+                        </Typography>
                         {/* <IconButton
                             size="small"
                             aria-label="bookmark"

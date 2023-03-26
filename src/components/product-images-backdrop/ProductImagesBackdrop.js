@@ -1,22 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Backdrop, IconButton } from "@mui/material";
-import prod1 from "../../assets/sampleproduct.png";
-import prod2 from "../../assets/image2.png";
-import prod3 from "../../assets/image3.png";
-import prod4 from "../../assets/image4.png";
-
-import thumb1 from "../../assets/sampleproduct.png";
-import thumb2 from "../../assets/image2.png";
-import thumb3 from "../../assets/image3.png";
-import thumb4 from "../../assets/image4.png";
 
 import CloseIcon from '@mui/icons-material/Close';
 import PreviousIcon from '@mui/icons-material/NavigateBefore';
 import NextIcon from '@mui/icons-material/NavigateNext';
 
-const IMAGES = [prod1, prod2, prod3, prod4];
-const THUMBS = [thumb1, thumb2, thumb3, thumb4];
-const ProductImagesBackdrop = ({ open, handleClose, currentPassedImage }) => {
+const ProductImagesBackdrop = ({ open, handleClose, currentPassedImage, IMAGES, THUMBS }) => {
   const [backdropImage, setBackdropImage] = useState(currentPassedImage);
   const [currentPassedImageIndex, setCurrentPassedImageIndex] = useState(1);
 
@@ -126,9 +115,8 @@ const ProductImagesBackdrop = ({ open, handleClose, currentPassedImage }) => {
                 }}
               >
                 <div
-                  className={`outlay ${
-                    index === currentPassedImageIndex && "activated"
-                  }`}
+                  className={`outlay ${index === currentPassedImageIndex && "activated"
+                    }`}
                 ></div>
                 <img src={th} alt={`product-${index + 1}`} />
               </div>

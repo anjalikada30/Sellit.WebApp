@@ -2,23 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./styles.css";
 import { ProductImagesBackdrop } from "../product-images-backdrop";
 
-import prod1 from "../../assets/sampleproduct.png";
-import prod2 from "../../assets/image2.png";
-import prod3 from "../../assets/image3.png";
-import prod4 from "../../assets/image4.png";
-
-import thumb1 from "../../assets/sampleproduct.png";
-import thumb2 from "../../assets/image2.png";
-import thumb3 from "../../assets/image3.png";
-import thumb4 from "../../assets/image4.png";
-
-const IMAGES = [prod1, prod2, prod3, prod4];
-const THUMBS = [thumb1, thumb2, thumb3, thumb4];
-
-const ProductImages = () => {
-  const [currentImage, setCurrentImage] = useState(prod1);
-  const [currentPassedImage, setCurrentPassedImage] = useState(prod1);
-
+const ProductImages = ({ images }) => {
+  const IMAGES = images.map(image => image.uri);
+  const THUMBS = images.map(image => image.uri);
+  const [currentImage, setCurrentImage] = useState(IMAGES[0]);
+  const [currentPassedImage, setCurrentPassedImage] = useState(IMAGES[0]);
   const [open, setOpen] = useState(false);
   const handleClick = (index) => {
     setCurrentImage(IMAGES[index]);
@@ -49,6 +37,8 @@ const ProductImages = () => {
           handleClose={handleClose}
           open={open}
           currentPassedImage={currentPassedImage}
+          IMAGES={[...IMAGES]}
+          THUMBS={[...THUMBS]}
         />
         <div className="thumbnails">
           {THUMBS.map((th, index) => {

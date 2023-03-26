@@ -1,9 +1,9 @@
 import { Step, StepLabel, Stepper } from '@mui/material';
 import React from 'react';
 
-const HorizontalStepper = ({ steps }) => {
+const HorizontalStepper = ({ steps, activeStep }) => {
     return (
-        <Stepper activeStep={1} alternativeLabel>
+        <Stepper activeStep={activeStep} alternativeLabel>
             {steps.map((label) => (
                 <Step key={label}>
                     <StepLabel>{label}</StepLabel>

@@ -52,7 +52,7 @@ function SwipeableTextMobileCarousel({ images = [], className, width }) {
           enableMouseEvents
         >
           {images.map((step, index) => (
-            <div key={step.id}>
+            <div key={step._id}>
               {Math.abs(activeStep - index) <= 2 ? (
                 <Box
                   component="img"
@@ -63,7 +63,7 @@ function SwipeableTextMobileCarousel({ images = [], className, width }) {
                     overflow: 'hidden',
                     width: '100%',
                   }}
-                  src={step.imgPath}
+                  src={step.uri}
                   alt={step.label}
                 />
               ) : null}

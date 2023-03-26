@@ -11,6 +11,14 @@ const getAllProducts = () => {
   return axios.get(API_URL + "users/products", { headers: authHeader() });
 };
 
+const getProducts = (data) => {
+  let query = '?';
+  Object.keys(data).map(item=>{
+    query = query + `&${item}=${data[item]}`
+  })
+  return axios.get(API_URL + "users/products" + query, { headers: authHeader() });
+};
+
 const getCategories = () => {
   return axios.get(API_URL + "products/categories", { headers: authHeader() });
 };
@@ -20,13 +28,24 @@ const getProductDetails = (id) => {
 };
 
 const sellProduct = (data) => {
-  return axios.post(API_URL + "products/", data, { headers: authHeader() });
+  return axios.post(API_URL + "products/", data, { headers: authHeader() })
 };
+
+const updateProduct = (data)=>{
+  return axios.put(API_URL + "products/", data, { headers: authHeader() })
+}
+
+const updateBid = (data)=>{
+  return axios.put(API_URL + "products/bid", data, { headers: authHeader() });
+}
 
 export default {
   uploadImage,
   getAllProducts,
   getCategories,
   sellProduct,
-  getProductDetails
+  getProductDetails,
+  getProducts,
+  updateBid,
+  updateProduct
 };

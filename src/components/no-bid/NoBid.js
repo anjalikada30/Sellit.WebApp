@@ -2,7 +2,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import React from "react";
 import nobidlogo from "../../assets/nobid.png";
 
-const NoBid = () => {
+const NoBid = ({title}) => {
     return (
         <Box sx={{
             flexGrow: 1,
@@ -19,12 +19,12 @@ const NoBid = () => {
             >
                 <Grid item>
                     <Typography gutterBottom variant="subtitle1" component="div" fontWeight='bold' fontSize={"1.4rem"}>
-                        No products found.
+                        {title}
                     </Typography>
                     <Box
                         component="img"
                         sx={{
-                            height: '28vh',
+                            height: '30vh',
                             display: 'block',
                             maxWidth: 400,
                             overflow: 'hidden',

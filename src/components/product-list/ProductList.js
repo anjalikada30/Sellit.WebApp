@@ -4,16 +4,12 @@ import { productsData } from '../../data/products';
 import { sortList } from '../../data/sortList';
 import { ProductListItem } from '../product-list-item';
 
-function ProductsList({title}) {
-    const [products, setProducts] = useState({ ...productsData })
-    const [searchObject, setSearchObject] = useState({
-        sort: 10
-    })
-    const handleFilterChange = (event) => {
-        setSearchObject({
-            ...searchObject,
-            [event.target.name]: event.target.value
-        })
+function ProductsList({title, products, searchObject, handleFilterChange}) {
+    const handleSortChange = (event) => {
+        // setSearchObject({
+        //     ...searchObject,
+        //     [event.target.name]: event.target.value
+        // })
     }
 
     return (
@@ -21,7 +17,7 @@ function ProductsList({title}) {
             <Typography variant='h6' m={1}>{title}:</Typography>
             <Grid container display={"flex"} justifyContent={"space-between"} alignItems="center">
                 <Grid item>
-                    <Typography variant='p' component="p" m={1} >Showing 1 - {products.totalResults} results of {products.totalResults}</Typography>
+                    <Typography variant='p' component="p" m={1} >Showing 1 - {products.page * 10} results of {products.totalResults}</Typography>
                 </Grid>
                 <Grid item>
                     <FormControl sx={{ m: 1, minWidth: 120 }}>
@@ -31,7 +27,7 @@ function ProductsList({title}) {
                             id="demo-simple-select-helper"
                             value={searchObject.sort}
                             label="Sort by"
-                            onChange={handleFilterChange}
+                            onChange={handleSortChange}
                             name='sort'
                             size='small'
                         >
@@ -45,27 +41,6 @@ function ProductsList({title}) {
                 </Grid>
             </Grid>
             <Grid container spacing={1}>
-                {
-                    products.results?.map(product => (
-                        <Grid item>
-                            <ProductListItem data={product} />
-                        </Grid>
-                    ))
-                }
-                {
-                    products.results?.map(product => (
-                        <Grid item>
-                            <ProductListItem data={product} />
-                        </Grid>
-                    ))
-                }
-                {
-                    products.results?.map(product => (
-                        <Grid item>
-                            <ProductListItem data={product} />
-                        </Grid>
-                    ))
-                }
                 {
                     products.results?.map(product => (
                         <Grid item>

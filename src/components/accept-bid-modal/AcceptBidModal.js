@@ -19,7 +19,7 @@ const style = {
     p: 4,
 };
 
-const AcceptBidModal = ({ handleClose }) => {
+const AcceptBidModal = ({ handleClose, handleAccept }) => {
 
     return (
         <div>
@@ -39,7 +39,7 @@ const AcceptBidModal = ({ handleClose }) => {
                     <Grid container spacing={1} sx={{mt: 2}}>
                         <Grid item >
                             <Button variant="outlined" color="success" size="small" startIcon={<DoneIcon />}
-                                onClick={handleClose}
+                                onClick={handleAccept}
                                 >
                                 Yes
                             </Button>

@@ -22,22 +22,22 @@ const images = [
     {
         id: 1,
         label: 'Sell your product anytime',
-        imgPath: image1,
+        uri: image1,
     },
     {
         id: 2,
         label: 'Sell your product anytime',
-        imgPath: image2,
+        uri: image2,
     },
     {
         id: 3,
         label: 'Sell your product anytime',
-        imgPath: image3,
+        uri: image3,
     },
     {
         id: 4,
         label: 'Sell your product anytime',
-        imgPath: image4,
+        uri: image4,
     },
 ];
 

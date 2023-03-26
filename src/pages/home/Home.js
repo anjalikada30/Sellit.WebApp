@@ -6,7 +6,7 @@ import pendingLogo from '../../assets/pendinglogo.png';
 import completedLogo from '../../assets/completedlogo.png';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Link } from 'react-router-dom';
-import { Loader, NoBid } from '../../components';
+import { Loader, NoBid, ProductListItem } from '../../components';
 import UserService from '../../services/user.service'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -14,7 +14,7 @@ const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
     color: theme.palette.text.secondary,
-    height: "15vh"
+    height: "14vh"
 }));
 
 const Home = () => {
@@ -27,7 +27,7 @@ const Home = () => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: "15vh",
+                height: "14vh",
                 p: 1
             }}>
                 <Grid item xs={4}>
@@ -80,17 +80,16 @@ const Home = () => {
                                 display: { xs: 'none', sm: 'block', md: 'block' }
                             }}>
 
-                                <Typography variant='h6' sx={{ mb: 4 }}>Latest Bid</Typography>
-                                <Paper elevation={2} style={paperStyle} >
-
-                                </Paper>
+                                <Typography variant='h6' sx={{ mb: 2 }}>Latest Bid</Typography>
+                                {/* <Paper elevation={2} style={paperStyle} > */}
+                                <ProductListItem data={products[0]} margin={1} />
+                                {/* </Paper> */}
                             </Box>
-                            <Typography variant='h6' sx={{ mt: 2 }}>All Bids</Typography>
+                            <Typography variant='h6' sx={{ mt: 1 }}>All Bids</Typography>
                             <Grid container spacing={2} sx={{
                                 display: 'flex',
                                 justifyContent: 'center',
-                                alignItems: 'center',
-                                mt: 4
+                                alignItems: 'center'
                             }}
                             >
                                 <Grid item xs={12} sm={6} md={5}>
@@ -115,7 +114,7 @@ const Home = () => {
                                 </Grid>
                             </Grid>
                         </> :
-                        <NoBid />
+                        <NoBid title={'No products found.'} />
                 }
             </Box>
             {

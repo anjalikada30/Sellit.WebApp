@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './sellproduct.css';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -23,94 +23,119 @@ const style = {
   overflowX: 'hidden'
 };
 
-const initialValues = {
-  title: {
-    value: '',
-    error: '',
-    required: true,
-    validate: 'text',
-    minLength: 2,
-    maxLength: 20,
-    helperText: 'Custom error message'
-  },
-  description: {
-    value: '',
-    error: '',
-    required: true,
-    validate: 'text',
-    minLength: 2,
-    maxLength: 20
-  },
-  type: {
-    value: '',
-    error: '',
-    required: true,
-    validate: 'select',
-  },
-  categoryId: {
-    value: '',
-    error: '',
-    required: true,
-    validate: 'select',
-  },
-  brand: {
-    value: '',
-    error: '',
-    required: true,
-    validate: 'text',
-    minLength: 3,
-    maxLength: 20
-  },
-  purchasedYear: {
-    value: '',
-    error: '',
-    required: true,
-    validate: 'text',
-    minLength: 3,
-    maxLength: 20
-  },
-  distanceDriven: {
-    value: '',
-    error: '',
-    required: true,
-    validate: 'text',
-    minLength: 3,
-    maxLength: 20
-  },
-  pickupAddress: {
-    value: '',
-    error: '',
-    required: true,
-    validate: 'text',
-    minLength: 3,
-    maxLength: 20
-  },
-  images: {
-    value: '',
-    error: '',
-    required: true
-  },
+const initialValues = (details) => {
+  return {
+    title: {
+      value: details?.title,
+      error: '',
+      required: true,
+      validate: 'text',
+      minLength: 2,
+      maxLength: 20,
+      helperText: 'Custom error message'
+    },
+    description: {
+      value: details?.description,
+      error: '',
+      required: true,
+      validate: 'text',
+      minLength: 2,
+      maxLength: 20
+    },
+    type: {
+      value: details?.type,
+      error: '',
+      required: true,
+      validate: 'select',
+    },
+    categoryId: {
+      value: details?.categoryId,
+      error: '',
+      required: true,
+      validate: 'select',
+    },
+    brand: {
+      value: details?.brand,
+      error: '',
+      required: true,
+      validate: 'text',
+      minLength: 3,
+      maxLength: 20
+    },
+    purchasedYear: {
+      value: details?.purchasedYear,
+      error: '',
+      required: true,
+      validate: 'text',
+      minLength: 3,
+      maxLength: 20
+    },
+    distanceDriven: {
+      value: details?.distanceDriven,
+      error: '',
+      required: true,
+      validate: 'text',
+      minLength: 3,
+      maxLength: 20
+    },
+    pickupAddress: {
+      value: details?.pickupAddress,
+      error: '',
+      required: true,
+      validate: 'text',
+      minLength: 3,
+      maxLength: 20
+    },
+    images: {
+      value: details?.images ?
+        details.images.map(image => image.uri) : [],
+      error: '',
+      required: true
+    }
+  }
 }
 
-const SellProduct = ({ handleClose }) => {
+const SellProduct = ({ handleClose, action, details }) => {
   const variant = 'outlined';
   const margin = 'normal';
   const size = 'small';
-  const [previewImages, setPreviewImages] = useState([]);
-  const [formValues, setFormValues] = useState(initialValues);
+  const [previewImages, setPreviewImages] = useState(details?.images ?
+    details.images.map(image => image.uri) : []);
+  const [formValues, setFormValues] = useState(initialValues(details));
   const [loading, setLoading] = useState(false)
   const [files, setFiles] = useState()
   const [snackDetails, setSnackDetails] = useState({})
+  const [categories, setCategories] = useState([])
   const isText = /^([a-zA-Z0-9 ]+)$/;
   const url = 'https://sell-it-bucket.s3.ap-northeast-1.amazonaws.com/'
+  console.log(formValues)
+  useEffect(() => {
+    fetchProductCategories()
+  }, [])
+
+  const fetchProductCategories = async () => {
+    setLoading(true)
+    try {
+      const response = await userService.getCategories();
+      setCategories(response?.data?.response?.categories)
+      setLoading(false)
+    } catch (err) {
+      setLoading(false)
+    }
+  }
 
   const isError = useCallback(
-    () =>
-      Object.keys(formValues).some(
+    () => {
+      let values = { ...formValues }
+      if (formValues.categoryId.value !== "641fe3d2ef2615d31e0fc238") {
+        delete values.distanceDriven;
+      }
+      Object.keys(values).some(
         (name) =>
-          (formValues[name].required && !formValues[name].value) ||
-          formValues[name].error
-      ),
+          (values[name].required && !values[name].value) ||
+          values[name].error
+      )
+    },
     [formValues]
   );
 
@@ -127,7 +152,7 @@ const SellProduct = ({ handleClose }) => {
     }
     let { type, name, value } = event.target;
     const fieldValue = value;
-    const fieldName = initialValues[name];
+    const fieldName = initialValues()[name];
     if (!fieldName) return;
 
     const {
@@ -179,7 +204,9 @@ const SellProduct = ({ handleClose }) => {
   }
   const handleUploadImages = async () => {
     let formData = new FormData()
-    formData.append('files', files[0])
+    for (const file of files) {
+      formData.append('files', file)
+    }
     setLoading(true)
     try {
       const response = await userService.uploadImage(formData)
@@ -205,7 +232,6 @@ const SellProduct = ({ handleClose }) => {
       "description": formValues.description.value,
       "brand": formValues.brand.value,
       "purchasedYear": formValues.purchasedYear.value,
-      "distanceDriven": formValues.distanceDriven.value,
       "pickupAddress": formValues.pickupAddress.value,
       "images": formValues.images.value.map((image, i) => {
         return {
@@ -214,13 +240,29 @@ const SellProduct = ({ handleClose }) => {
         }
       })
     }
+    if (formValues.categoryId.value === "641fe3d2ef2615d31e0fc238") {
+      data = {
+        ...data,
+        "distanceDriven": formValues.distanceDriven.value
+      }
+    }
     setLoading(true)
     try {
-      const response = await userService.sellProduct(data)
-      console.log(response)
+      if (action !== 'edit')
+        await userService.sellProduct(data)
+      else {
+        data.productId = details._id;
+        await userService.updateProduct(data)
+      }
       setLoading(false)
+      handleClose('success')
     } catch (error) {
       setLoading(false)
+      setSnackDetails({
+        show: true,
+        severity: 'error',
+        message: "Unable to add product. Please try again later."
+      })
     }
   }
   const handleSnackClose = (event, reason) => {
@@ -296,8 +338,11 @@ const SellProduct = ({ handleClose }) => {
                 required={formValues.categoryId.required}
               >
                 <option value=""> </option>
-                <option value="vehicles">Vehicles</option>
-                <option value="electronics">Electronics</option>
+                {
+                  categories.map(category => (
+                    <option value={category._id} key={category._id}>{category.name}</option>
+                  ))
+                }
               </TextField>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -373,23 +418,26 @@ const SellProduct = ({ handleClose }) => {
                 required={lastName.required}
               />
             </Grid> */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant={variant}
-                margin={margin}
-                fullWidth
-                label="Distance Driven"
-                name="distanceDriven"
-                placeholder="distance driven(in KM)"
-                size={size}
-                type='number'
-                value={formValues.distanceDriven.value}
-                onChange={handleChange}
-                error={!!formValues.distanceDriven.error}
-                helperText={formValues.distanceDriven.error}
-                required={formValues.distanceDriven.required}
-              />
-            </Grid>
+            {
+              formValues.categoryId.value === "641fe3d2ef2615d31e0fc238" ?
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant={variant}
+                    margin={margin}
+                    fullWidth
+                    label="Distance Driven"
+                    name="distanceDriven"
+                    placeholder="distance driven(in KM)"
+                    size={size}
+                    type='number'
+                    value={formValues.distanceDriven.value}
+                    onChange={handleChange}
+                    error={!!formValues.distanceDriven.error}
+                    helperText={formValues.distanceDriven.error}
+                    required={formValues.distanceDriven.required}
+                  />
+                </Grid> : null
+            }
             <Grid item xs={12} sm={6}>
               <TextField
                 variant={variant}
@@ -426,7 +474,7 @@ const SellProduct = ({ handleClose }) => {
                     component="label"
                     size='small'
                     startIcon={<UploadIcon />}
-                    disabled={previewImages.length ? false : true}
+                    disabled={files ? false : true}
                     onClick={handleUploadImages}
                   >
                     Upload
@@ -445,7 +493,7 @@ const SellProduct = ({ handleClose }) => {
               size={size}
               onClick={!isError() ? handleSellProduct : () => null}
             >
-              Sell Product
+              {action ? 'Edit' : 'Sell Product'}
             </Button>
             <Button
               variant="outlined"

@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Tab, Tabs } from '@mui/material';
+import { Alert, Snackbar, Tab, Tabs } from '@mui/material';
 import logo from '../../assets/logo.png';
 import { Link } from "react-router-dom";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -57,6 +57,7 @@ function Header() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [value, setValue] = React.useState(0);
   const [openSellModal, setOpenSellModal] = React.useState(false)
+  const [snackDetails, setSnackDetails] = React.useState({})
   const { isLoggedIn } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
@@ -73,12 +74,27 @@ function Header() {
 
   const handleCloseUserMenu = (label) => {
     setAnchorElUser(null);
-    if(label === 'Logout'){
-      console.log('logout called')
+    if (label === 'Logout') {
       dispatch(logout())
     }
   };
-  console.log('isLoggedin', isLoggedIn)
+  const handleSellModalClose = (message) => {
+    setOpenSellModal(false)
+    if (message === 'success') {
+      setSnackDetails({
+        show: true,
+        severity: 'success',
+        message: "Product added successfully!"
+      })
+    }
+  }
+  const handleSnackClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackDetails({});
+  };
   return (
     <>
       <AppBar position="static" sx={{ background: "white" }} >
@@ -192,9 +208,19 @@ function Header() {
       </AppBar>
       {
         openSellModal ?
-          <SellProduct handleClose={() => setOpenSellModal(false)} />
+          <SellProduct handleClose={handleSellModalClose} />
           : null
       }
+      <Snackbar open={snackDetails.show}
+        autoHideDuration={6000}
+        onClose={handleSnackClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleSnackClose} severity={snackDetails.severity}
+          sx={{ width: '100%' }}>
+          {snackDetails.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

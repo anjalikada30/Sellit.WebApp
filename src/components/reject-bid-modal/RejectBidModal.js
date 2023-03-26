@@ -18,10 +18,58 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
-
-const RejectBidModal = ({ handleClose }) => {
+const initialValues = {
+    reason: {
+        value: '',
+        error: '',
+        required: true,
+        minLength: 2,
+        maxLength: 20,
+        helperText: 'Custom error message'
+    }
+}
+const RejectBidModal = ({ handleClose, handleReject }) => {
     const [open, setOpen] = React.useState(false);
+    const [formValues, setFormValues] = React.useState(initialValues)
+    const handleChange = (event) => {
+        let { type, name, value } = event.target;
+        const fieldValue = value;
+        const fieldName = initialValues[name];
+        if (!fieldName) return;
 
+        const {
+            required,
+            validate,
+            minLength,
+            maxLength,
+            helperText
+        } = fieldName;
+
+        let error = "";
+
+        if (required && !fieldValue) error = "This field is required";
+        if (minLength && value && value.length < minLength)
+            error = `Minimum ${minLength} characters is required.`;
+        if (maxLength && value && value.length > maxLength)
+            error = "Maximum length exceeded!";
+        setFormValues({
+            ...formValues,
+            [name]: {
+                ...formValues[name],
+                value: fieldValue,
+                error: error
+            }
+        })
+    }
+    const isError = React.useCallback(
+        () =>
+            Object.keys(formValues).some(
+                (name) =>
+                    (formValues[name].required && !formValues[name].value) ||
+                    formValues[name].error
+            ),
+        [formValues]
+    );
     return (
         <div>
             <Modal
@@ -36,24 +84,27 @@ const RejectBidModal = ({ handleClose }) => {
                     </Typography>
                     <TextField
                         margin={'normal'}
-                        required
                         fullWidth
                         label="Reason"
-                        name="notes"
+                        name="reason"
                         placeholder="reason for rejection"
                         size={'small'}
                         multiline
                         rows={3}
-                    // value={lastName.value}
-                    // onChange={handleChange}
-                    // error={!!lastName.error}
-                    // helperText={lastName.error}
-                    // required={lastName.required}
+                        value={formValues.reason.value}
+                        onChange={handleChange}
+                        error={!!formValues.reason.error}
+                        helperText={formValues.reason.error}
+                        required={formValues.reason.required}
                     />
                     <Grid container spacing={1} sx={{ mt: 2 }}>
                         <Grid item >
-                            <Button variant="outlined" color="error" size="small" startIcon={<CloseIcon />}
-                                onClick={handleClose}>
+                            <Button variant="outlined" color="error" size="small"
+                                startIcon={<CloseIcon />}
+                                disabled={isError()}
+                                onClick={!isError() ?
+                                    () => handleReject(formValues.reason.value)
+                                    : () => null}>
                                 Reject
                             </Button>
                         </Grid>

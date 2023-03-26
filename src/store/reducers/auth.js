@@ -17,7 +17,6 @@ const initialState = { isLoggedIn: false, initialLogin: false, user: null }
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
-  console.log(type, payload)
   switch (type) {
     case REGISTER_SUCCESS:
       return {
@@ -55,7 +54,6 @@ export default function (state = initialState, action) {
         user: null,
       };
     default:
-      console.log('default called')
       return state;
   }
 }

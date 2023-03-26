@@ -18,10 +18,65 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
+const initialValues = {
+    notes: {
+        value: '',
+        error: '',
+        required: true,
+        minLength: 2,
+        maxLength: 20,
+        helperText: 'Custom error message'
+    },
+    newPrice: {
+        value: null,
+        error: '',
+        required: true,
+        min: 2,
+        max: 20,
+        helperText: 'Custom error message'
+    }
+}
+const CreateBidModal = ({ handleCreate, handleClose }) => {
+    const [formValues, setFormValues] = React.useState(initialValues)
+    const handleChange = (event) => {
+        let { type, name, value } = event.target;
+        const fieldValue = value;
+        const fieldName = initialValues[name];
+        if (!fieldName) return;
 
-const CreateBidModal = ({ handleClose }) => {
-    const [open, setOpen] = React.useState(false);
+        const {
+            required,
+            validate,
+            minLength,
+            maxLength,
+            helperText
+        } = fieldName;
 
+        let error = "";
+
+        if (required && !fieldValue) error = "This field is required";
+        if (minLength && value && value.length < minLength)
+            error = `Minimum ${minLength} characters is required.`;
+        if (maxLength && value && value.length > maxLength)
+            error = "Maximum length exceeded!";
+        setFormValues({
+            ...formValues,
+            [name]: {
+                ...formValues[name],
+                value: fieldValue,
+                error: error
+            }
+        })
+    }
+    const isError = React.useCallback(
+        () =>
+            Object.keys(formValues).some(
+                (name) =>
+                    (formValues[name].required && !formValues[name].value) ||
+                    formValues[name].error
+            ),
+        [formValues]
+    );
     return (
         <div>
             <Modal
@@ -44,10 +99,10 @@ const CreateBidModal = ({ handleClose }) => {
                         autoComplete="newPrice"
                         size='small'
                         type="number"
-                        // value={values.mobile}
-                        // onChange={handleChange("mobile")}
-                        // helperText={error ? "Please enter valid phone number" : ""}
-                        // error={error}
+                        value={formValues.newPrice.value}
+                        onChange={handleChange}
+                        error={!!formValues.newPrice.error}
+                        helperText={formValues.newPrice.error}
                         autoFocus
                     />
                     <TextField
@@ -60,16 +115,18 @@ const CreateBidModal = ({ handleClose }) => {
                         size={'small'}
                         multiline
                         rows={3}
-                    // value={lastName.value}
-                    // onChange={handleChange}
-                    // error={!!lastName.error}
-                    // helperText={lastName.error}
-                    // required={lastName.required}
+                        value={formValues.notes.value}
+                        onChange={handleChange}
+                        error={!!formValues.notes.error}
+                        helperText={formValues.notes.error}
                     />
                     <Grid container spacing={1} sx={{ mt: 2 }}>
                         <Grid item >
                             <Button variant="outlined" color="primary" size="small" startIcon={<AddIcon />}
-                                onClick={handleClose}
+                                disabled={isError()}
+                                onClick={!isError() ?
+                                    () => handleCreate(formValues.newPrice.value, formValues.notes.value)
+                                    : () => null}
                             >
                                 Create
                             </Button>
