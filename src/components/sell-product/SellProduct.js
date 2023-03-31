@@ -29,18 +29,18 @@ const initialValues = (details) => {
       value: details?.title,
       error: '',
       required: true,
-      validate: 'text',
+      //validate: 'text',
       minLength: 2,
-      maxLength: 20,
+      maxLength: 1000,
       helperText: 'Custom error message'
     },
     description: {
       value: details?.description,
       error: '',
       required: true,
-      validate: 'text',
+      //validate: 'text',
       minLength: 2,
-      maxLength: 20
+      maxLength: 1000
     },
     type: {
       value: details?.type,
@@ -60,13 +60,13 @@ const initialValues = (details) => {
       required: true,
       validate: 'text',
       minLength: 3,
-      maxLength: 20
+      maxLength: 1000
     },
     purchasedYear: {
       value: details?.purchasedYear,
       error: '',
       required: true,
-      validate: 'text',
+      validate: 'number',
       minLength: 3,
       maxLength: 20
     },
@@ -82,7 +82,7 @@ const initialValues = (details) => {
       value: details?.pickupAddress,
       error: '',
       required: true,
-      validate: 'text',
+      //validate: 'text',
       minLength: 3,
       maxLength: 20
     },
@@ -107,6 +107,7 @@ const SellProduct = ({ handleClose, action, details }) => {
   const [snackDetails, setSnackDetails] = useState({})
   const [categories, setCategories] = useState([])
   const isText = /^([a-zA-Z0-9 ]+)$/;
+  const isNumber = /^\d+$/;
   const url = 'https://sell-it-bucket.s3.ap-northeast-1.amazonaws.com/'
   console.log(formValues)
   useEffect(() => {
@@ -175,6 +176,11 @@ const SellProduct = ({ handleClose, action, details }) => {
         case "text":
           if (value && !isText.test(value))
             error = helperText || "This field accepts alphanumeric only.";
+          break;
+
+        case "number":
+          if (value && !isNumber.test(value))
+            error = helperText || "This field accepts numbers only.";
           break;
 
         case "select":
@@ -459,7 +465,11 @@ const SellProduct = ({ handleClose, action, details }) => {
             <Grid item xs={12} sm={6}>
               <Grid container>
                 <Grid item>
-                  <input type="file" multiple accept="image/*" onChange={handleImageChange} style={{ margin: "2px", paddingTop: '16px' }} />
+                  <input type="file" multiple
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    style={{ margin: "2px", paddingTop: '16px' }}
+                  />
                   {previewImages && (
                     <div>
                       {previewImages.map((img, i) => {

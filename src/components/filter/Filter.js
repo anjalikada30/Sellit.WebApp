@@ -26,7 +26,7 @@ const bidStatus = [
     }
 ]
 
-function Filter({ handleChange, page, handleReset, searchObject }) {
+function Filter({ handleChange, page, searchObject, disableBidStatus }) {
     const [categories, setCategories] = useState([])
     const [expandCategoriesMore, setExpandCategoriesMore] = useState(true);
     const minmin = 0;
@@ -45,7 +45,13 @@ function Filter({ handleChange, page, handleReset, searchObject }) {
 
     const handlePriceRangeChange = (event, newValue) => {
         setPriceRangeValue(newValue);
+        if (searchObject.minPrice === newValue[0]) {
+            handleChange('maxPrice', newValue[1])
+        } else {
+            handleChange('minPrice', newValue[0])
+        }
     };
+
     return (
         <>
             <Box>
@@ -65,7 +71,7 @@ function Filter({ handleChange, page, handleReset, searchObject }) {
                     value={searchObject.category}
                     onChange={(event) => handleChange('category', event.target.value)}
                 >
-                    <option value=""> </option>
+                    <option value=""></option>
                     {
                         categories.map(category => (
                             <option value={category._id} key={category._id}>{category.name}</option>
@@ -85,8 +91,9 @@ function Filter({ handleChange, page, handleReset, searchObject }) {
                     size={'small'}
                     value={searchObject.bidStatus}
                     onChange={(event) => handleChange('bidStatus', event.target.value)}
+                    disabled={disableBidStatus}
                 >
-                    <option value=""> </option>
+                    <option value=""></option>
                     {
                         bidStatus.map(status => (
                             <option value={status.id} key={status.id}>{status.name}</option>
@@ -108,15 +115,15 @@ function Filter({ handleChange, page, handleReset, searchObject }) {
                             ))}
                         </FormGroup> : null
                 } */}
-                {/* <Grid container display={"flex"} justifyContent={"space-between"} alignItems="center">
-                    <Grid item>
-                        <Typography variant='p' component="p" m={1.5} fontWeight={"bold"}>Price:</Typography>
-                    </Grid>
-                </Grid> */}
-                <Divider />
                 {
                     page === 'completed' ?
                         <>
+                            <Grid container display={"flex"} justifyContent={"space-between"} alignItems="center">
+                                <Grid item>
+                                    <Typography variant='p' component="p" m={1.5} fontWeight={"bold"}>Price:</Typography>
+                                </Grid>
+                            </Grid>
+                            <Divider />
                             <Slider
                                 getAriaLabel={() => "Price range"}
                                 value={priceRangeValue}

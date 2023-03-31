@@ -48,7 +48,7 @@ const settings = [
   },
   {
     label: "Logout",
-    route: "/"
+    route: "/login"
   }
 ];
 

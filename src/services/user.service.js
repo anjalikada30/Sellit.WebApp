@@ -12,9 +12,11 @@ const getAllProducts = () => {
 };
 
 const getProducts = (data) => {
+  console.log('data-', data)
   let query = '?';
   Object.keys(data).map(item=>{
-    query = query + `&${item}=${data[item]}`
+    if(data[item])
+      query = query + `&${item}=${data[item]}`
   })
   return axios.get(API_URL + "users/products" + query, { headers: authHeader() });
 };

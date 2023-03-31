@@ -18,6 +18,9 @@ function PendingBids() {
     const [loading, setLoading] = useState(false);
     const [products, setProducts] = useState([]);
     const [snackDetails, setSnackDetails] = React.useState({})
+    const [searchObject, setSearchObject] = useState({
+        bidStatus: 1
+    });
     useEffect(() => {
         fetchAllProducts()
     }, [])
@@ -46,6 +49,35 @@ function PendingBids() {
 
         setSnackDetails({});
     };
+    const handleFilterChange = async (name, value) => {
+        setSearchObject({
+            ...searchObject,
+            [name]: value
+        })
+        setLoading(true)
+        try {
+            const response = await userService.getProducts({
+                ...searchObject,
+                [name]: value
+            })
+            setLoading(false)
+            setProducts(response?.data?.response?.products)
+        } catch (err) {
+            setLoading(false)
+            setSnackDetails({
+                show: true,
+                severity: 'error',
+                message: "Unable to fetch products. Please try again later"
+            })
+        }
+    }
+    const handleFilterReset = () => {
+        setSearchObject({
+            category: '',
+            bidStatus: 1
+        })
+        fetchAllProducts()
+    }
     return (
         <>
             <Box sx={{
@@ -53,40 +85,40 @@ function PendingBids() {
                 //p: 1,
                 margin: 1
             }}>
-                {
-                    products.totalResults ?
-                        <Grid container spacing={0} sx={{
-                            display: 'flex',
-                            // justifyContent: 'center',
-                            // alignItems: 'center',
-                            height: '85vh'
-                        }}>
-                            <Grid item xs={12} sm={2} md={2}>
-                                <Item>
-                                    <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={'/home'}>
-                                        Back
-                                    </Button>
-                                    <Filter />
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={10} md={10}>
-                                <Item>
-                                    <ProductsList title={'Pending Bids'} products={products} />
-                                </Item>
-                            </Grid>
-                        </Grid> : null
-                }
-                {
-                    !products.totalResults ?
-                        <>
-                            <Button variant="outlined" startIcon={<ArrowBackIosNew />}
-                                component={Link} to={'/home'}>
+                <Grid container spacing={0} sx={{
+                    display: 'flex',
+                    // justifyContent: 'center',
+                    // alignItems: 'center',
+                    height: '85vh'
+                }}>
+                    <Grid item xs={12} sm={2} md={2}>
+                        <Item>
+                            <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={'/home'}>
                                 Back
                             </Button>
-                            <NoBid title={'No pending bids found.'} />
-                        </>
-                        : null
-                }
+                            <Filter page="all" handleChange={handleFilterChange}
+                                handleReset={handleFilterReset}
+                                searchObject={searchObject}
+                                disableBidStatus={true} />
+                            <Button variant="text" onClick={handleFilterReset}>
+                                Reset
+                            </Button>
+                        </Item>
+                    </Grid>
+                    <Grid item xs={12} sm={10} md={10}>
+                        <Item>
+                            {
+                                products.totalResults ?
+                                    <Grid item xs={12} sm={10} md={10}>
+                                        <ProductsList title={'Pending Bids'}
+                                            products={products}
+                                            searchObject={searchObject}
+                                            handleFilterChange={handleFilterChange} />
+                                    </Grid> : <NoBid title={'No pending bids found.'} />
+                            }
+                        </Item>
+                    </Grid>
+                </Grid>
             </Box>
             {
                 loading ?

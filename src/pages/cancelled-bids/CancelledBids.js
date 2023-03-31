@@ -18,6 +18,9 @@ function CancelledBids() {
     const [loading, setLoading] = useState(false);
     const [products, setProducts] = useState([]);
     const [snackDetails, setSnackDetails] = React.useState({})
+    const [searchObject, setSearchObject] = useState({
+        bidStatus: 3
+    });
     useEffect(() => {
         fetchAllProducts()
     }, [])
@@ -46,6 +49,35 @@ function CancelledBids() {
 
         setSnackDetails({});
     };
+    const handleFilterChange = async (name, value) => {
+        setSearchObject({
+            ...searchObject,
+            [name]: value
+        })
+        setLoading(true)
+        try {
+            const response = await userService.getProducts({
+                ...searchObject,
+                [name]: value
+            })
+            setLoading(false)
+            setProducts(response?.data?.response?.products)
+        } catch (err) {
+            setLoading(false)
+            setSnackDetails({
+                show: true,
+                severity: 'error',
+                message: "Unable to fetch products. Please try again later"
+            })
+        }
+    }
+    const handleFilterReset = () => {
+        setSearchObject({
+            category: '',
+            bidStatus: 3
+        })
+        fetchAllProducts()
+    }
     return (
         <>
             <Box sx={{
@@ -53,38 +85,36 @@ function CancelledBids() {
                 //p: 1,
                 margin: 1
             }}>
-                {
-                    products.totalResults ?
-                        <Grid container spacing={0} sx={{
-                            display: 'flex',
-                            // justifyContent: 'center',
-                            // alignItems: 'center',
-                            height: '85vh'
-                        }}>
-                            <Grid item xs={12} sm={2} md={2}>
-                                <Item>
-                                    <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={'/home'}>
-                                        Back
-                                    </Button>
-                                    <Filter />
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={10} md={10}>
-                                <ProductsList title={'Cancelled Bids'} products={products} />
-                            </Grid>
-                        </Grid> : null
-                }
-                {
-                    !products.totalResults ?
-                        <>
-                            <Button variant="outlined" startIcon={<ArrowBackIosNew />}
-                                component={Link} to={'/home'}>
+                <Grid container spacing={0} sx={{
+                    display: 'flex',
+                    // justifyContent: 'center',
+                    // alignItems: 'center',
+                    height: '85vh'
+                }}>
+                    <Grid item xs={12} sm={2} md={2}>
+                        <Item>
+                            <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={'/home'}>
                                 Back
                             </Button>
-                            <NoBid title={'No cancelled products found.'}/>
-                        </>
-                        : null
-                }
+                            <Filter page="all" handleChange={handleFilterChange}
+                                handleReset={handleFilterReset}
+                                searchObject={searchObject}
+                                disableBidStatus={true} />
+                            <Button variant="text" onClick={handleFilterReset}>
+                                Reset
+                            </Button>
+                        </Item>
+                    </Grid>
+                    {
+                        products.totalResults ?
+                            <Grid item xs={12} sm={10} md={10}>
+                                <ProductsList title={'Rejected Bids'}
+                                    products={products}
+                                    searchObject={searchObject}
+                                    handleFilterChange={handleFilterChange} />
+                            </Grid> : <NoBid title={'No rejected bids found.'} />
+                    }
+                </Grid>
             </Box>
             {
                 loading ?

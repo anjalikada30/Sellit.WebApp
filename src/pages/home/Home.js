@@ -104,12 +104,12 @@ const Home = () => {
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={5}>
                                     <Item>
-                                        <BidCard name="Completed Bids" logo={completedLogo} link="/completed-bids" />
+                                        <BidCard name="Accepted Bids" logo={completedLogo} link="/completed-bids" />
                                     </Item>
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={5}>
                                     <Item>
-                                        <BidCard name="Cancelled Bids" logo={cancelledLogo} link="/cancelled-bids" />
+                                        <BidCard name="Rejected Bids" logo={cancelledLogo} link="/cancelled-bids" />
                                     </Item>
                                 </Grid>
                             </Grid>

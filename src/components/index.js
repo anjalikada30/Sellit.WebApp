@@ -14,3 +14,4 @@ export { SignupStep1 } from './signup-step1';
 export { SignupStep2 } from './signup-step2';
 export { SignupStep3 } from './signup-step3';
 export { EditUserMobile } from './edit-user-mobile';
+export { ScrollButton } from './scroll-button';
