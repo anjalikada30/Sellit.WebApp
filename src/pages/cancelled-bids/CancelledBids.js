@@ -43,7 +43,6 @@ function CancelledBids() {
             (entries) => {
                 const first = entries[0];
                 if (first.isIntersecting) {
-                    console.log('intersecting')
                     setPageNum((no) => no + 1);
                 }
             })
@@ -146,7 +145,6 @@ function CancelledBids() {
                             </Button>
                         </Item>
                     </Grid>
-                    {console.log(pageNum, totalPages)}
                     {
                         products.totalResults ?
                             <Grid item xs={12} sm={10} md={10}>

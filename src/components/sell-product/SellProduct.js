@@ -109,7 +109,6 @@ const SellProduct = ({ handleClose, action, details }) => {
   const isText = /^([a-zA-Z0-9 ]+)$/;
   const isNumber = /^\d+$/;
   const url = 'https://sell-it-bucket.s3.ap-northeast-1.amazonaws.com/'
-  console.log(formValues)
   useEffect(() => {
     fetchProductCategories()
   }, [])

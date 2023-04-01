@@ -24,7 +24,7 @@ const initialValues = {
         error: '',
         required: true,
         minLength: 2,
-        maxLength: 20,
+        maxLength: 1000,
         helperText: 'Custom error message'
     },
     newPrice: {

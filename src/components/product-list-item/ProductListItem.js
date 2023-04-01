@@ -6,9 +6,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import sampleProduct from '../../assets/sampleproduct.png';
-import { Box, Button, IconButton } from '@mui/material';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
+import { Box, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const Img = styled('img')({
@@ -18,29 +16,29 @@ const Img = styled('img')({
     maxHeight: '100%',
 });
 const ProductBidStatus = {
-    1 : 'CREATED',
-    2 : 'ACCEPTED',
-    3 : 'REJECTED',
-    4 : 'MODIFIED'
+    1: 'CREATED',
+    2: 'ACCEPTED',
+    3: 'REJECTED',
+    4: 'MODIFIED'
 };
 const ProductBidColor = {
-    1 : 'primary',
-    2 : 'success',
-    3 : 'error',
-    4 : 'primary'
+    1: 'primary',
+    2: 'success',
+    3: 'error',
+    4: 'primary'
 };
 const OrderStatus = {
-    1 : 'Pending',
-    2 : 'Picked up date estimated',
-    3 : 'Picked up',
-    4 : 'Paid'
-  };
+    1: 'Pending',
+    2: 'Picked up date estimated',
+    3: 'Picked up',
+    4: 'Paid'
+};
 const ProductListItem = ({ data, margin }) => {
     return (
         <Paper
             sx={{
                 p: 2,
-                margin: margin ? 1:'auto',
+                margin: margin ? 1 : 'auto',
                 maxWidth: 500,
                 flexGrow: 1,
                 backgroundColor: (theme) =>
@@ -50,7 +48,7 @@ const ProductListItem = ({ data, margin }) => {
             <Grid container spacing={2}>
                 <Grid item>
                     <ButtonBase sx={{ width: 128, height: 128 }}>
-                        <Img alt="complex" src={sampleProduct} />
+                        <Img alt="product-image" src={data.images ? data.images[0].uri : ''} />
                     </ButtonBase>
                 </Grid>
                 <Grid item xs={12} sm container>
@@ -84,7 +82,7 @@ const ProductListItem = ({ data, margin }) => {
                                 </Typography> : null
                         }
                         <Typography variant="subtitle1" component="div" sx={{ fontSize: '0.8rem' }}>
-                                    Order status: {OrderStatus[data.orderStatus]}
+                            Order status: {OrderStatus[data.orderStatus]}
                         </Typography>
                         {/* <IconButton
                             size="small"

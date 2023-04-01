@@ -21,22 +21,24 @@ const register = (data) => {
     })
 };
 
-const login = (mobile) => {
+const login = ({ mobile, password }) => {
   return axios
-    .post(API_URL + "login", {
-      mobile
-    })
+    .post(API_URL + "login", { mobile, password })
     .then((response) => {
       return {
         status: SUCCESS_RESPONSE,
         data: response.data
       }
     })
-    .catch(() => {
-      return {
+    .catch((error) => {
+      console.log(error)
+      const err = {
         status: ERROR_RESPONSE,
-        error: "Mobile number not found. Please signup to continue."
       }
+      if (error?.response?.data?.message === 'User not found')
+        err.error = 'User not found. Please sign up to continue'
+      else err.error = error?.response?.data?.message
+      return err;
     })
 };
 

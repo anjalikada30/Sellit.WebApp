@@ -1,11 +1,12 @@
-import { Box, Button, Grid, IconButton, Modal, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, IconButton, Modal, Snackbar, Typography } from "@mui/material";
 import React, { useState } from "react";
 import './styles.css';
 import EditIcon from '@mui/icons-material/Edit';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { user } from '../../data/user';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { EditUserMobile, SignupStep1, SignupStep2, SignupStep3 } from "../../components";
+import { EditUserMobile, Loader, SignupStep1, SignupStep2, SignupStep3 } from "../../components";
+import userService from "../../services/user.service";
 
 const style = {
     position: 'absolute',
@@ -107,7 +108,7 @@ const initialValues = (user) => {
             validate: 'proof'
         },
         identityProofImageUri: {
-            value: '',
+            value: user?.identityProofImageUri,
             error: '',
             required: true,
             validate: 'image'
@@ -154,6 +155,8 @@ const UserProfile = () => {
     const [editBankDetails, setEditBankDetails] = useState(false)
     const [editMobileDetails, setEditMobileDetails] = useState(false)
     const [formValues, setFormValues] = useState(initialValues(user))
+    const [loading, setLoading] = useState(false)
+    const [snackDetails, setSnackDetails] = useState({})
     const isText = /^([a-zA-Z0-9 ]+)$/;
     const isEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     const isPhone = /^[5-9]\d{9}$/gi;
@@ -479,9 +482,38 @@ const UserProfile = () => {
             }
         })
     }
-    const handleEditPersonalDetails = () => {
-        console.log('edited')
+    const handleEditPersonalDetails = async () => {
+        const data = {
+            "name": formValues.name.value,
+            "email": formValues.email.value,
+            "identityProofType": formValues.identityProofType.value,
+            "identityProofNumber": formValues.identityProofNumber.value,
+            "identityProofImageUri": formValues.identityProofImageUri.value,
+            "addressLine1": formValues.addressLine1.value,
+            "landmark": formValues.landmark.value,
+            "city": formValues.city.value,
+            "state": formValues.state.value,
+            "zipCode": formValues.zipCode.value,
+            "country": formValues.country.value
+        }
         setEditPersonalDetails(false)
+        setLoading(true)
+        try {
+            await userService.editPersonalDetails(data)
+            setLoading(false)
+            setSnackDetails({
+                show: true,
+                severity: 'success',
+                message: "Edited personal details successfully!"
+            })
+        } catch (error) {
+            setLoading(false)
+            setSnackDetails({
+                show: true,
+                severity: 'error',
+                message: "Unable to edit personal details. Please try again later."
+            })
+        }
     }
     const handleEditKycDetails = () => {
         console.log('edited')
@@ -522,7 +554,13 @@ const UserProfile = () => {
         handleClose: handleEditMobileClose,
         handleEdit: handleEditMobileDetails
     }
+    const handleSnackClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
 
+        setSnackDetails({});
+    };
     return (
         <>
             <Box sx={{
@@ -634,6 +672,20 @@ const UserProfile = () => {
 
                     </Modal> : null
             }
+            {
+                loading ?
+                    <Loader /> : null
+            }
+            <Snackbar open={snackDetails.show}
+                autoHideDuration={6000}
+                onClose={handleSnackClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert onClose={handleSnackClose} severity={snackDetails.severity}
+                    sx={{ width: '100%' }}>
+                    {snackDetails.message}
+                </Alert>
+            </Snackbar>
         </>
     )
 }

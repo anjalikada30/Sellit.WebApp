@@ -9,6 +9,7 @@ import {
   SET_OTP_MESSAGE,
   SET_SIGNUP_MESSAGE,
   CLEAR_SIGNUP_MESSAGE,
+  CLEAR_MESSAGE,
 } from "./types";
 
 import AuthService from "../../services/auth.service";
@@ -42,8 +43,11 @@ export const register = (data) => (dispatch) => {
   );
 };
 
-export const login = (mobile) => (dispatch) => {
-  return AuthService.login(mobile).then(
+export const login = ({mobile, password}) => (dispatch) => {
+  dispatch({
+    type: CLEAR_MESSAGE
+  });
+  return AuthService.login({mobile, password}).then(
     (response) => {
       if (response.status === SUCCESS_RESPONSE) {
         dispatch({

@@ -85,7 +85,7 @@ const VerifyOtp = () => {
                         <Box color="text.secondary">
                             <Typography variant="body2">
                                 Enter OTP Sent to your mobile number XXXXXX{mobile?.substring(6, 11)}
-                                <Link href="/" variant="body2" sx={{ marginLeft: 2 }}>
+                                <Link href="/login" variant="body2" sx={{ marginLeft: 2 }}>
                                     {"Change"}
                                 </Link>
                             </Typography>

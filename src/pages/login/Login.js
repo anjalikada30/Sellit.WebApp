@@ -40,23 +40,37 @@ const images = [
         uri: image4,
     },
 ];
-
+const paperStyle = {
+    backgroundColor: '#fff',
+    padding: '10px',
+    //color: theme.palette.text.secondary,
+    height: "72vh"
+}
 function Login() {
     const [values, setValues] = useState({
         mobile: ""
     });
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(false)
+    const [error, setError] = useState({})
     let navigate = useNavigate();
     const { isLoggedIn } = useSelector(state => state.auth);
     const { message } = useSelector(state => state.message);
     const dispatch = useDispatch();
 
-    const handleChange = name => event => {
-        setError(!mobileregex.test(event.target.value))
-        setValues({ ...values, [name]: event.target.value });
+    const handleChange = event => {
+        if (event.target.name === 'mobile')
+            setError({
+                ...error,
+                mobile: !mobileregex.test(event.target.value)
+            })
+        else if (event.target.name === 'password')
+            setError({
+                ...error,
+                password: !event.target.value || event.target.value.length < 6
+            })
+        setValues({ ...values, [event.target.name]: event.target.value });
     };
-
+    console.log(values)
     const mobileregex = /^[5-9]\d{9}$/gi;
 
     const Item = styled(Paper)(({ theme }) => ({
@@ -64,14 +78,14 @@ function Login() {
         ...theme.typography.body2,
         padding: theme.spacing(1),
         color: theme.palette.text.secondary,
-        height: "65vh"
+        height: "72vh"
     }));
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (!error) {
+        if (!error.mobile && !error.password) {
             setLoading(true)
-            dispatch(login(values.mobile))
+            dispatch(login(values))
                 .then(() => {
                     setLoading(false)
                     navigate("/verify-otp")
@@ -81,9 +95,10 @@ function Login() {
                 })
         }
     }
+    console.log('page render')
     return (
         <>
-            <div className='page-container'>
+            {/* <div className='page-container'>
                 <Grid container
                     direction="row"
                     alignItems="center"
@@ -118,17 +133,31 @@ function Login() {
                                     <TextField
                                         margin="normal"
                                         required
-                                        fullWidth
-                                        id="mobile"
                                         label="Phone Number"
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        inputProps={{ maxLength: 4 }}
                                         name="mobile"
-                                        autoComplete="mobile"
-                                        size='small'
+                                        size="small"
+                                        type="text"
+                                        fullWidth
                                         value={values.mobile}
-                                        onChange={handleChange("mobile")}
-                                        helperText={error ? "Please enter valid phone number" : ""}
-                                        error={error}
-                                        autoFocus
+                                        helperText={error.mobile ? "Please enter valid phone number" : ""}
+                                        error={error.mobile}
+                                    />
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        id="password"
+                                        label="Password"
+                                        name="password"
+                                        autoComplete="password"
+                                        size='small'
+                                        value={values.password}
+                                        onChange={handleChange}
+                                        helperText={error.password ? "This field is required" : ""}
+                                        error={error.password}
                                     />
                                     <Button
                                         type="submit"
@@ -148,6 +177,80 @@ function Login() {
                                 </Box>
                             </Box>
                         </Item>
+                    </Grid>
+                </Grid>
+            </div> */}
+            <div className='page-container'>
+                <Grid container
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="center"
+                    style={{ minHeight: '88vh' }}>
+                    <Grid item md={4} display={{ xs: "none", lg: "block", md: "block" }} >
+                        <Item><SwipeableTextMobileCarousel images={images} /></Item>
+                    </Grid>
+                    <Grid item xs={11} sm={6} md={3} align='center'>
+                        <Paper style={paperStyle}>
+                            <Avatar sx={{ m: 1, bgcolor: 'secondary' }}>
+                                <LockOutlinedIcon />
+                            </Avatar>
+                            <Typography component="h6" variant="h6">
+                                Sign in
+                            </Typography>
+
+                            {
+                                message ?
+                                    <Alert severity="error">
+                                        {message}
+                                    </Alert> : null
+                            }
+                            <form onSubmit={handleSubmit} noValidate>
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    label="Phone Number"
+                                    onChange={handleChange}
+                                    variant="outlined"
+                                    name="mobile"
+                                    size="small"
+                                    type="text"
+                                    fullWidth
+                                    value={values.mobile}
+                                    helperText={error.mobile ? "Please enter valid phone number" : ""}
+                                    error={error.mobile}
+                                />
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="password"
+                                    label="Password"
+                                    name="password"
+                                    autoComplete="password"
+                                    size='small'
+                                    value={values.password}
+                                    onChange={handleChange}
+                                    helperText={error.password ? (!values.password ? "This field is required"
+                                        : "Password must be atleast 6 characters") : ""}
+                                    error={error.password}
+                                />
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    Send otp
+                                </Button>
+                            </form>
+                            <Grid container>
+                                <Grid item>
+                                    <Link href="/sign-up" variant="body2">
+                                        {"Don't have an account? Sign Up"}
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </Paper>
                     </Grid>
                 </Grid>
             </div>
