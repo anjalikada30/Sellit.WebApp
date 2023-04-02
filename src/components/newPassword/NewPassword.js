@@ -1,5 +1,6 @@
 import React from 'react';
-import { Grid, Paper, TextField, Button, Alert, Link } from '@mui/material'
+import { Grid, Paper, TextField, Button, Alert } from '@mui/material'
+import { Link } from 'react-router-dom';
 
 const NewPassword = ({ user, handleChange, errors, handleSubmit, message }) => {
     const paperStyle = { padding: 20, width: 280, margin: "60px auto" }
@@ -48,12 +49,12 @@ const NewPassword = ({ user, handleChange, errors, handleSubmit, message }) => {
                         justifyContent: 'space-between'
                     }}>
                         <Grid item>
-                            <Link href="/sign-up" variant="body2">
+                            <Link to="/sign-up">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="/login" variant="body2">
+                            <Link to="/">
                                 {"Sign in"}
                             </Link>
                         </Grid>

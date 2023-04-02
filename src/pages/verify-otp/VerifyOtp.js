@@ -1,8 +1,8 @@
 import React from 'react';
-import { Grid, Paper, Box, Avatar, TextField, Button, Typography, Link, Alert, Snackbar } from '@mui/material'
+import { Grid, Paper, Box, Avatar, TextField, Button, Typography, Alert, Snackbar } from '@mui/material'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { verifyOtp, resendOtp } from '../../store/actions/auth';
 import { Loader } from '../../components';
 
@@ -85,7 +85,7 @@ const VerifyOtp = () => {
                         <Box color="text.secondary">
                             <Typography variant="body2">
                                 Enter OTP Sent to your mobile number XXXXXX{mobile?.substring(6, 11)}
-                                <Link href="/login" variant="body2" sx={{ marginLeft: 2 }}>
+                                <Link to="/" style={{ marginLeft: 2 }}>
                                     {"Change"}
                                 </Link>
                             </Typography>

@@ -4,7 +4,7 @@ import { Alert, Box, Button, Grid, Snackbar, Step, StepLabel, Stepper, Typograph
 import { ProductImages } from '../../components/product-images'
 import { HorizontalStepper, Loader, ProductDescription, VerticalStepper } from '../../components';
 import { ArrowBackIosNew } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Carousel from '../../components/carousel/Carousel';
 import BidDetails from '../../components/bid-details/BidDetails';
 import userService from '../../services/user.service';
@@ -32,6 +32,11 @@ const ProductDetails = () => {
     })
     const [openSellModal, setOpenSellModal] = React.useState(false)
     const { userId } = useSelector(state => state.auth);
+
+    //retrieving back route details from route props
+    const location = useLocation()
+    const backRoute = location?.state?.back;
+
     useEffect(() => {
         fetchProductDetails();
     }, [])
@@ -141,7 +146,7 @@ const ProductDetails = () => {
                     pl: "1vw"
                 }}>
                     <Grid item>
-                        <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={'/all-bids'}>
+                        <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={backRoute}>
                             Back
                         </Button>
                     </Grid>

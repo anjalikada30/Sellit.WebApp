@@ -2,7 +2,7 @@ import { Alert, Box, Button, Grid, Paper, Snackbar, styled } from '@mui/material
 import React, { useEffect, useRef, useState } from 'react';
 import { Filter, Loader, NoBid, ProductsList, ScrollButton } from '../../components';
 import { ArrowBackIosNew } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import userService from '../../services/user.service';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -131,7 +131,7 @@ function PendingBids() {
                 }}>
                     <Grid item xs={12} sm={2} md={2}>
                         <Item>
-                            <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={'/home'}>
+                            <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={"/home"}>
                                 Back
                             </Button>
                             <Filter page="all" handleChange={handleFilterChange}

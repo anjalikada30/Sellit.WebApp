@@ -1,8 +1,8 @@
 import React from 'react';
-import { Grid, Paper, Box, Avatar, TextField, Button, Typography, Link, Alert, Snackbar } from '@mui/material'
+import { Grid, Paper, Box, Avatar, TextField, Button, Typography, Alert, Snackbar } from '@mui/material'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { resendOtp } from '../../store/actions/auth';
 
 const ResetPassword = ({ user, handleChange, errors, handleSubmit, setLoading, setSnackDetails }) => {
@@ -45,7 +45,7 @@ const ResetPassword = ({ user, handleChange, errors, handleSubmit, setLoading, s
                         <Box color="text.secondary">
                             <Typography variant="body2">
                                 Enter OTP Sent to your mobile number XXXXXX{user.mobile?.substring(6, 11)}
-                                <Link href="/forgot-password" variant="body2" sx={{ marginLeft: 2 }}>
+                                <Link to="/forgot-password" sx={{ marginLeft: 2 }}>
                                     {"Change"}
                                 </Link>
                             </Typography>
@@ -137,12 +137,12 @@ const ResetPassword = ({ user, handleChange, errors, handleSubmit, setLoading, s
                         marginTop: "3px"
                     }}>
                         <Grid item>
-                            <Link href="/sign-up" variant="body2">
+                            <Link to="/sign-up">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="/login" variant="body2">
+                            <Link to="/">
                                 {"Sign in"}
                             </Link>
                         </Grid>

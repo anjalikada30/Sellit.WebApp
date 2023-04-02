@@ -44,9 +44,11 @@ const Home = () => {
                     <Typography variant="h6">{name}</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                    <Button variant="contained" component={Link} to={link}>
-                        <NavigateNextIcon />
-                    </Button>
+                    <Link to={link} state={{ back: "/home" }}>
+                        <Button variant="contained">
+                            <NavigateNextIcon />
+                        </Button>
+                    </Link>
                 </Grid>
             </Grid>
         )
@@ -57,9 +59,9 @@ const Home = () => {
     const fetchAllProducts = async () => {
         setLoading(true)
         try {
-            const response = await UserService.getAllProducts()
+            const response = await UserService.getAllProductsForHome()
             setLoading(false)
-            setProducts(response?.data?.response?.products?.results)
+            setProducts(response)
         } catch (err) {
             setLoading(false)
         }
@@ -82,7 +84,7 @@ const Home = () => {
 
                                 <Typography variant='h6' sx={{ mb: 2 }}>Latest Bid</Typography>
                                 {/* <Paper elevation={2} style={paperStyle} > */}
-                                <ProductListItem data={products[0]} margin={1} />
+                                <ProductListItem data={products[0]} margin={1} backRoute={"/home"}/>
                                 {/* </Paper> */}
                             </Box>
                             <Typography variant='h6' sx={{ mt: 1 }}>All Bids</Typography>

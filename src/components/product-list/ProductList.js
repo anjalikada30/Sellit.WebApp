@@ -5,6 +5,13 @@ import { sortList } from '../../data/sortList';
 import { sortTypes } from '../../data/sortTypes';
 import { ProductListItem } from '../product-list-item';
 
+const backRoutes = {
+    "All Bids": "/all-bids",
+    "Rejected Bids": "/cancelled-bids",
+    "Accepted Bids": "/completed-bids",
+    "Pending Bids": "/pending-bids"
+}
+
 function ProductsList({ title, products, searchObject, handleFilterChange }) {
     const variant = 'outlined';
     const margin = 'normal';
@@ -67,7 +74,7 @@ function ProductsList({ title, products, searchObject, handleFilterChange }) {
                 {
                     products.results?.map(product => (
                         <Grid item>
-                            <ProductListItem data={product} />
+                            <ProductListItem data={product} backRoute={backRoutes[title]}/>
                         </Grid>
                     ))
                 }

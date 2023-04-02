@@ -26,12 +26,12 @@ const bidStatus = [
     }
 ]
 
-function Filter({ handleChange, page, searchObject, disableBidStatus }) {
+function Filter({ handleChange, page, searchObject, disableBidStatus, handlePriceChange }) {
     const [categories, setCategories] = useState([])
     const [expandCategoriesMore, setExpandCategoriesMore] = useState(true);
     const minmin = 0;
     const maxmax = 100000;
-    const [priceRangeValue, setPriceRangeValue] = useState([0, 50000]);
+    const [priceRangeValue, setPriceRangeValue] = useState([0, 0]);
     const variant = 'outlined';
     const margin = 'normal';
     useEffect(() => {
@@ -40,15 +40,15 @@ function Filter({ handleChange, page, searchObject, disableBidStatus }) {
 
     const fetchCategories = async () => {
         const response = await userService.getCategories();
-        setCategories(response?.data?.response?.categories)
+        setCategories(response)
     }
 
     const handlePriceRangeChange = (event, newValue) => {
         setPriceRangeValue(newValue);
         if (searchObject.minPrice === newValue[0]) {
-            handleChange('maxPrice', newValue[1])
+            handlePriceChange('maxPrice', newValue[1])
         } else {
-            handleChange('minPrice', newValue[0])
+            handlePriceChange('minPrice', newValue[0])
         }
     };
 
@@ -143,6 +143,7 @@ function Filter({ handleChange, page, searchObject, disableBidStatus }) {
                                     value={priceRangeValue[0]}
                                     onChange={(e) => {
                                         setPriceRangeValue([Number(e.target.value), priceRangeValue[1]]);
+                                        handlePriceChange('minPrice', e.target.value)
                                     }}
                                     size="small"
                                 />
@@ -156,6 +157,7 @@ function Filter({ handleChange, page, searchObject, disableBidStatus }) {
                                     value={priceRangeValue[1]}
                                     onChange={(e) => {
                                         setPriceRangeValue([priceRangeValue[0], Number(e.target.value)]);
+                                        handlePriceChange('maxPrice', e.target.value)
                                     }}
                                     size="small"
                                 />

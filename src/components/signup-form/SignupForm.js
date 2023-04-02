@@ -1,6 +1,7 @@
-import { Box, Grid, Link, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import { Box, Grid, Step, StepLabel, Stepper, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { register } from '../../store/actions/auth';
 import { Loader } from '../loader';
 import { SignupStep1 } from '../signup-step1';
@@ -383,7 +384,7 @@ const SignupForm = () => {
                     {handleSteps()}
                     <Grid container>
                         <Grid item>
-                            <Link href="/login" variant="body2">
+                            <Link to="/" >
                                 {"Already have an account? Sign in"}
                             </Link>
                         </Grid>

@@ -33,7 +33,7 @@ const OrderStatus = {
     3: 'Picked up',
     4: 'Paid'
 };
-const ProductListItem = ({ data, margin }) => {
+const ProductListItem = ({ data, margin, backRoute }) => {
     return (
         <Paper
             sx={{
@@ -66,9 +66,13 @@ const ProductListItem = ({ data, margin }) => {
                             </Box>
                         </Grid>
                         <Grid item >
-                            <Button variant="text" component={Link} to={`/product/${data._id}`}>
-                                {"View Details"}
-                            </Button>
+                            <Link to={`/product/${data._id}`}
+                                state={{ back: backRoute }}
+                                style={{ textDecoration: "none" }}>
+                                <Button variant="text">
+                                    {"View Details"}
+                                </Button>
+                            </Link>
                         </Grid>
                     </Grid>
                     <Grid item xs container direction="column" spacing={2} sx={{ mt: 1 }}>

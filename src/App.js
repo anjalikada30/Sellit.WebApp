@@ -27,7 +27,7 @@ function App() {
           <Header />
           <Suspense fallback={<Loader />}>
             <Routes>
-              <Route path='/login' element={<LoginComponent />} />
+              <Route path='/' element={<LoginComponent />} />
               <Route path='/verify-otp' element={<VerifyOtpComponent />} />
               <Route path='/forgot-password' element={<ForgotPasswordComponent />} />
               <Route path='/home'

@@ -12,10 +12,9 @@ import { Alert, AlertTitle, FormControl, IconButton, InputAdornment, InputLabel,
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { login } from '../../store/actions/auth'
 
 const images = [
@@ -238,7 +237,7 @@ function Login() {
                                         : "Password must be atleast 6 characters") : ""}
                                     error={error.password}
                                 />
-                                <Link href="/forgot-password" variant="body2">
+                                <Link to="/forgot-password">
                                     {"Forgot Password"}
                                 </Link>
                                 <Button
@@ -252,7 +251,7 @@ function Login() {
                             </form>
                             <Grid container>
                                 <Grid item>
-                                    <Link href="/sign-up" variant="body2">
+                                    <Link to="/sign-up">
                                         {"Don't have an account? Sign Up"}
                                     </Link>
                                 </Grid>

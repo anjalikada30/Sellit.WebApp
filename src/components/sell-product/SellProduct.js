@@ -117,7 +117,7 @@ const SellProduct = ({ handleClose, action, details }) => {
     setLoading(true)
     try {
       const response = await userService.getCategories();
-      setCategories(response?.data?.response?.categories)
+      setCategories(response)
       setLoading(false)
     } catch (err) {
       setLoading(false)

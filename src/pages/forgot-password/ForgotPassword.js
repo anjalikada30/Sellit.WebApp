@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper, Box, Avatar, TextField, Button, Typography, Link, Alert, Snackbar } from '@mui/material'
+import { Grid, Paper, Box, Avatar, TextField, Button, Typography, Alert, Snackbar } from '@mui/material'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -74,7 +74,7 @@ const ForgotPassword = () => {
             } else if (value !== user.password) {
                 errors = {
                     ...validationErrors,
-                    confirmPassword: "Maximum 20 characters are allowed."
+                    confirmPassword: "Password Mismatch!"
                 }
             } else if (value.length < 6) {
                 errors = {
@@ -199,7 +199,7 @@ const ForgotPassword = () => {
     return (
         <>
             {
-                !showResetPassword ?
+                !showResetPassword && !showSuccess ?
                     <NewPassword
                         user={user}
                         errors={validationErrors}
@@ -207,7 +207,7 @@ const ForgotPassword = () => {
                         handleSubmit={handleMobileSubmit} /> : null
             }
             {
-                showResetPassword ?
+                showResetPassword && !showSuccess ?
                     <ResetPassword
                         user={user}
                         errors={validationErrors}

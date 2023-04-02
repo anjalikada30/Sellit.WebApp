@@ -1,10 +1,11 @@
 import { Alert, Box, Button, Grid, Paper, Snackbar, styled } from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Filter, Loader, NoBid, ProductsList, ScrollButton } from '../../components';
 import { ArrowBackIosNew } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import userService from '../../services/user.service';
+import debounce from 'lodash.debounce';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -106,6 +107,28 @@ function CompletedBids() {
             [name]: value
         })
     }
+    const handlePriceChange = (name, value) => {
+        setSearchObject({
+            ...searchObject,
+            [name]: value
+        })
+        setTotalPages(0)
+        setPageNum(1)
+        fetchProducts({
+            ...searchObject,
+            [name]: value
+        })
+    }
+
+    const debouncedResults = useMemo(() => {
+        return debounce(handlePriceChange, 1000);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            debouncedResults.cancel();
+        };
+    });
 
     const handleFilterReset = () => {
         setSearchObject({
@@ -133,14 +156,15 @@ function CompletedBids() {
                 }}>
                     <Grid item xs={12} sm={2} md={2}>
                         <Item>
-                            <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={'/home'}>
+                            <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={"/home"}>
                                 Back
                             </Button>
                             <Filter handleChange={handleFilterChange}
                                 handleReset={handleFilterReset}
                                 searchObject={searchObject}
                                 disableBidStatus={true}
-                                page={'completed'} />
+                                page={'completed'}
+                                handlePriceChange={debouncedResults} />
                             <Button variant="text" onClick={handleFilterReset}>
                                 Reset
                             </Button>

@@ -1,7 +1,6 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import { Link } from "@mui/material";
-
+import { Link } from "react-router-dom";
 const Success = ({text}) => {
     return (
         <>
@@ -10,7 +9,7 @@ const Success = ({text}) => {
             </Typography>
             <Typography component="p" align="center">
                 Please login to continue
-                <Link href="/" variant="body2" sx={{ marginLeft: 2 }}>
+                <Link to="/"  style={{ marginLeft: 2 }}>
                     {"Login"}
                 </Link>
             </Typography>
