@@ -16,3 +16,5 @@ export { SignupStep3 } from './signup-step3';
 export { EditUserMobile } from './edit-user-mobile';
 export { ScrollButton } from './scroll-button';
 export { BidsPage } from './bids-page';
+export { ResetPassword } from './reset-password';
+export { Success } from './success';

@@ -4,7 +4,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   SET_MESSAGE,
-  LOGIN1_SUCCESS,
+  LOGIN_SUCCESS,
   LOGIN2_SUCCESS,
   SET_OTP_MESSAGE,
   SET_SIGNUP_MESSAGE,
@@ -51,16 +51,17 @@ export const login = ({mobile, password}) => (dispatch) => {
     (response) => {
       if (response.status === SUCCESS_RESPONSE) {
         dispatch({
-          type: LOGIN1_SUCCESS,
+          type: LOGIN_SUCCESS,
           payload: {
-            userId: response.data.response.userId,
-            mobile: mobile
+            userId: response.data.user._id,
+            mobile: mobile,
+            user: response.data.user
           },
         });
-        dispatch({
-          type: SET_OTP_MESSAGE,
-          payload: null,
-        });
+        // dispatch({
+        //   type: SET_OTP_MESSAGE,
+        //   payload: null,
+        // });
         return Promise.resolve();
       } else if (response.status === ERROR_RESPONSE) {
         dispatch({
@@ -127,3 +128,4 @@ export const logout = () => (dispatch) => {
     type: LOGOUT,
   });
 };
+

@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { Loader, SwipeableTextMobileCarousel } from '../../components';
-import { Alert, AlertTitle, Typography } from '@mui/material';
+import { Alert, AlertTitle, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -56,6 +56,15 @@ function Login() {
     const { isLoggedIn } = useSelector(state => state.auth);
     const { message } = useSelector(state => state.message);
     const dispatch = useDispatch();
+    const mobileregex = /^[5-9]\d{9}$/gi;
+
+    const Item = styled(Paper)(({ theme }) => ({
+        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+        ...theme.typography.body2,
+        padding: theme.spacing(1),
+        color: theme.palette.text.secondary,
+        height: "72vh"
+    }));
 
     const handleChange = event => {
         if (event.target.name === 'mobile')
@@ -70,16 +79,6 @@ function Login() {
             })
         setValues({ ...values, [event.target.name]: event.target.value });
     };
-    console.log(values)
-    const mobileregex = /^[5-9]\d{9}$/gi;
-
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        color: theme.palette.text.secondary,
-        height: "72vh"
-    }));
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -87,15 +86,16 @@ function Login() {
             setLoading(true)
             dispatch(login(values))
                 .then(() => {
+                    console.log('login success')
                     setLoading(false)
-                    navigate("/verify-otp")
+                    navigate("/home")
                 })
                 .catch(() => {
                     setLoading(false)
                 })
         }
     }
-    console.log('page render')
+
     return (
         <>
             {/* <div className='page-container'>
@@ -187,17 +187,20 @@ function Login() {
                     justifyContent="center"
                     style={{ minHeight: '88vh' }}>
                     <Grid item md={4} display={{ xs: "none", lg: "block", md: "block" }} >
-                        <Item><SwipeableTextMobileCarousel images={images} /></Item>
-                    </Grid>
-                    <Grid item xs={11} sm={6} md={3} align='center'>
                         <Paper style={paperStyle}>
-                            <Avatar sx={{ m: 1, bgcolor: 'secondary' }}>
-                                <LockOutlinedIcon />
-                            </Avatar>
-                            <Typography component="h6" variant="h6">
-                                Sign in
-                            </Typography>
-
+                            <SwipeableTextMobileCarousel images={images} />
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={11} sm={6} md={3} >
+                        <Paper style={paperStyle}>
+                            <Grid item align='center'>
+                                <Avatar sx={{ m: 1, bgcolor: 'secondary' }}>
+                                    <LockOutlinedIcon />
+                                </Avatar>
+                                <Typography component="h6" variant="h6">
+                                    Sign in
+                                </Typography>
+                            </Grid>
                             {
                                 message ?
                                     <Alert severity="error">
@@ -226,6 +229,7 @@ function Login() {
                                     id="password"
                                     label="Password"
                                     name="password"
+                                    type='password'
                                     autoComplete="password"
                                     size='small'
                                     value={values.password}
@@ -234,13 +238,16 @@ function Login() {
                                         : "Password must be atleast 6 characters") : ""}
                                     error={error.password}
                                 />
+                                <Link href="/forgot-password" variant="body2">
+                                    {"Forgot Password"}
+                                </Link>
                                 <Button
                                     type="submit"
                                     fullWidth
                                     variant="contained"
                                     sx={{ mt: 3, mb: 2 }}
                                 >
-                                    Send otp
+                                    Sign in
                                 </Button>
                             </form>
                             <Grid container>

@@ -17,6 +17,7 @@ const CancelledBidsComponent = React.lazy(() => import('./pages/cancelled-bids/C
 const BookmarksComponent = React.lazy(() => import('./pages/bookmarks/Bookmarks.js'));
 const ProductDetailsComponent = React.lazy(() => import('./pages/product-details/ProductDetails.js'));
 const UserProfileComponent = React.lazy(() => import('./pages/user-profile/UserProfile'));
+const ForgotPasswordComponent = React.lazy(() => import('./pages/forgot-password/ForgotPassword'));
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Routes>
               <Route path='/login' element={<LoginComponent />} />
               <Route path='/verify-otp' element={<VerifyOtpComponent />} />
+              <Route path='/forgot-password' element={<ForgotPasswordComponent />} />
               <Route path='/home'
                 element={
                   <Protected>

@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Alert, Snackbar, Tab, Tabs } from '@mui/material';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo2.png';
 import { Link } from "react-router-dom";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
@@ -144,7 +144,7 @@ function Header() {
             <Box
               component="img"
               sx={{
-                height: 64,
+                height: 40,
               }}
               alt="sell-it"
               src={logo}

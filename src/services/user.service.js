@@ -12,7 +12,6 @@ const getAllProducts = () => {
 };
 
 const getProducts = (data) => {
-  console.log('data-', data)
   let query = '?';
   Object.keys(data).map(item=>{
     if(data[item])
@@ -41,6 +40,14 @@ const updateBid = (data)=>{
   return axios.put(API_URL + "products/bid", data, { headers: authHeader() });
 }
 
+const forgotPassword = (data) => {
+  return axios.post(API_URL + "auth/forgot-password", data)
+};
+
+const resetPassword = (data) => {
+  return axios.post(API_URL + "auth/reset-password", data)
+};
+
 export default {
   uploadImage,
   getAllProducts,
@@ -49,5 +56,7 @@ export default {
   getProductDetails,
   getProducts,
   updateBid,
-  updateProduct
+  updateProduct,
+  forgotPassword,
+  resetPassword
 };

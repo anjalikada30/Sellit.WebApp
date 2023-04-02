@@ -12,18 +12,23 @@ const SignupStep1 = ({
     handleClose,
     handleEdit
 }) => {
-    const { name, email, mobile, addressLine1, landmark, zipCode, city, state, country } = formValues;
+    const { name, email, mobile, addressLine1, landmark,
+        zipCode, city, state, country, password, confirmPassword } = formValues;
     const margin = "normal";
     const variant = "outlined";
     // Check if all values are not empty and if there are some errors
     const isError = useCallback(
         () =>
-            Object.keys({ name, email, mobile, addressLine1, landmark, zipCode, city, state, country }).some(
+            Object.keys({
+                name, email, mobile, addressLine1, landmark,
+                zipCode, city, state, country, password, confirmPassword
+            }).some(
                 (name) =>
                     (formValues[name].required && !formValues[name].value) ||
                     formValues[name].error
             ),
-        [name, email, mobile, addressLine1, landmark, zipCode, city, state, country]
+        [name, email, mobile, addressLine1, landmark,
+            zipCode, city, state, country, password, confirmPassword]
     );
     return (
         <>
@@ -79,6 +84,48 @@ const SignupStep1 = ({
                                 error={!!mobile.error}
                                 helperText={mobile.error}
                                 required={mobile.required}
+                            />
+                        </Grid> : null
+                }
+
+                {
+                    action !== 'edit' ?
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                variant={variant}
+                                margin={margin}
+                                fullWidth
+                                label="Password"
+                                name="password"
+                                placeholder="password"
+                                type="password"
+                                size='small'
+                                value={password.value}
+                                onChange={handleChange}
+                                error={!!password.error}
+                                helperText={password.error}
+                                required={password.required}
+                            />
+                        </Grid> : null
+                }
+
+                {
+                    action !== 'edit' ?
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                variant={variant}
+                                margin={margin}
+                                fullWidth
+                                label="Confirm Password"
+                                name="confirmPassword"
+                                placeholder="confirm password"
+                                type="text"
+                                size='small'
+                                value={confirmPassword.value}
+                                onChange={handleChange}
+                                error={!!confirmPassword.error}
+                                helperText={confirmPassword.error}
+                                required={confirmPassword.required}
                             />
                         </Grid> : null
                 }

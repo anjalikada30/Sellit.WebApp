@@ -25,9 +25,12 @@ const login = ({ mobile, password }) => {
   return axios
     .post(API_URL + "login", { mobile, password })
     .then((response) => {
+      if (response?.data?.response?.tokens?.accessToken) {
+        localStorage.setItem("user", JSON.stringify(response.data.response));
+      }
       return {
         status: SUCCESS_RESPONSE,
-        data: response.data
+        data: response.data.response
       }
     })
     .catch((error) => {

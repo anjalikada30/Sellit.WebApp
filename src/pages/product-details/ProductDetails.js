@@ -123,14 +123,14 @@ const ProductDetails = () => {
     const handleSellModalClose = (message) => {
         setOpenSellModal(false)
         if (message === 'success') {
-          setSnackDetails({
-            show: true,
-            severity: 'success',
-            message: "Product edited successfully!"
-          })
-          fetchProductDetails();
+            setSnackDetails({
+                show: true,
+                severity: 'success',
+                message: "Product edited successfully!"
+            })
+            fetchProductDetails();
         }
-      }
+    }
     return (
         <>
             <Box sx={{ m: 2, pb: 4, backgroundColor: "#d3d3d347" }}>
@@ -166,10 +166,13 @@ const ProductDetails = () => {
                     </Grid>
                     <Grid item >
                         <ProductDescription data={productdetails} />
-                        <Button variant="outlined" startIcon={<EditIcon />}
-                            onClick={handleEditProduct} sx={{ mt: 1 }}>
-                            Edit Product Details
-                        </Button>
+                        {
+                            !productdetails?.bidHistory?.length ?
+                                <Button variant="outlined" startIcon={<EditIcon />}
+                                    onClick={handleEditProduct} sx={{ mt: 1 }}>
+                                    Edit Product Details
+                                </Button> : null
+                        }
                     </Grid>
                 </Grid>
                 <Box sx={{ width: '100%', m: 2 }}>
@@ -189,7 +192,7 @@ const ProductDetails = () => {
             }
             {
                 openSellModal ?
-                    <SellProduct handleClose={handleSellModalClose} action="edit" details={productdetails}/>
+                    <SellProduct handleClose={handleSellModalClose} action="edit" details={productdetails} />
                     : null
             }
             <Snackbar open={snackDetails.show}

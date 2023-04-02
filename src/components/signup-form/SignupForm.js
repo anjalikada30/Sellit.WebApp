@@ -6,7 +6,7 @@ import { Loader } from '../loader';
 import { SignupStep1 } from '../signup-step1';
 import SignupStep2 from '../signup-step2/SignupStep2';
 import { SignupStep3 } from '../signup-step3';
-import { SignupSuccess } from '../signup-success';
+import { Success } from '../success';
 
 
 const labels = ["Personal details", "KYC details", "Bank details"];
@@ -18,7 +18,7 @@ const initialValues = {
         required: true,
         validate: 'text',
         minLength: 2,
-        maxLength: 20,
+        //maxLength: 20,
         helperText: 'Custom error message'
     },
     email: {
@@ -33,6 +33,22 @@ const initialValues = {
         required: true,
         validate: 'phone',
         maxLength: 15
+    },
+    password: {
+        value: '',
+        error: '',
+        required: true,
+        validate: 'password',
+        minLength: 6,
+        maxLength: 20
+    },
+    confirmPassword: {
+        value: '',
+        error: '',
+        required: true,
+        validate: 'confirmPassword',
+        minLength: 6,
+        maxLength: 20
     },
     identityProofNumber: {
         value: '',
@@ -225,6 +241,13 @@ const SignupForm = () => {
                             "Please enter a valid phone number.";
                     break;
 
+                case "confirmPassword":
+                    if (value !== formValues.password.value)
+                        error =
+                            helperText ||
+                            "Password Mismatch!";
+                    break;
+
                 case "zip":
                     if (value && !isZip.test(value))
                         error = helperText || "Please enter a valid zip code.";
@@ -257,7 +280,7 @@ const SignupForm = () => {
                     if (value && !isIfsccode.test(value))
                         error = helperText || "Please enter a valid ifsc code.";
                     break;
-                    
+
                 case "upi":
                     if (value && !isUpi.test(value))
                         error = helperText || "Please enter a valid upi id.";
@@ -282,6 +305,7 @@ const SignupForm = () => {
             "name": formValues.name.value,
             "email": formValues.email.value,
             "mobile": formValues.mobile.value,
+            "password": formValues.password.value,
             "identityProofType": formValues.identityProofType.value,
             "identityProofNumber": formValues.identityProofNumber.value,
             "identityProofImageUri": formValues.identityProofImageUri.value,
@@ -340,7 +364,7 @@ const SignupForm = () => {
     return (
         <>
             {activeStep === labels.length ? (
-                <SignupSuccess />
+                <Success text={"Thank you!"}/>
             ) : (
                 <>
                     <Box sx={{ my: 1 }}>
@@ -359,7 +383,7 @@ const SignupForm = () => {
                     {handleSteps()}
                     <Grid container>
                         <Grid item>
-                            <Link href="/" variant="body2">
+                            <Link href="/login" variant="body2">
                                 {"Already have an account? Sign in"}
                             </Link>
                         </Grid>
