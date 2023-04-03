@@ -19,7 +19,9 @@ const OrderStatus = [
     'Paid',
 ];
 const ProductDetails = () => {
-    const [productdetails, setProductdetails] = useState({})
+    const [productdetails, setProductdetails] = useState({
+        bidHistory: []
+    })
     const [loading, setLoading] = useState(false)
     const [snackDetails, setSnackDetails] = React.useState({})
     const [bidStepperDetails, setBidStepperDetails] = useState({
@@ -43,13 +45,13 @@ const ProductDetails = () => {
     const fetchProductDetails = async () => {
         setLoading(true)
         try {
-            const id = window.location.href.split('/')[4]
-            const response = await userService.getProductDetails(id)
-            setLoading(false)
-            setProductdetails(response?.data?.response?.product)
-            if (response?.data?.response?.product?.bidStatus !== 2)
-                updateBidStepperDetails(response?.data?.response?.product)
-            else updateacceptedStepperDetails(response?.data?.response?.product)
+        const id = window.location.href.split('/')[4]
+        const response = await userService.getProductDetails(id)
+        setLoading(false)
+        setProductdetails(response?.data?.response?.product)
+        if (response?.data?.response?.product?.bidStatus !== 2)
+            updateBidStepperDetails(response?.data?.response?.product)
+        else updateacceptedStepperDetails(response?.data?.response?.product)
         }
         catch (err) {
             setLoading(false)
@@ -75,18 +77,24 @@ const ProductDetails = () => {
             }
         }) : []
     }
-    console.log(productdetails.createdAt ?
-        moment(productdetails.createdAt).format('MMMM Do YYYY, h:mm:ss a') : null)
     const updateBidStepperDetails = (details) => {
         let steps = [
-            'Order created'
-            //createdAt: moment(details.createdAt).format('MMMM Do YYYY, h:mm:ss a')
+            {
+                label: 'Order created',
+                date: moment(details.createdAt).format('DD/MM/yyyy, h:mm:ss a')
+            }
         ]
-        let activeStep;
+        let activeStep, doneFlag;
         if (!details.bidHistory.length) {
-            steps.push('Bidding is not started')
-            steps.push('Bidding in progress')
-            steps.push('Bid Accepted')
+            steps.push({
+                label: 'Bidding is not started'
+            })
+            steps.push({
+                label: 'Bidding in progress'
+            })
+            steps.push({
+                label: 'Bid Accepted'
+            })
             activeStep = 1;
         } else {
             let bids = [...details.bidHistory];
@@ -94,22 +102,42 @@ const ProductDetails = () => {
             console.log(bids)
             bids.map(bid => {
                 if (bid.bidCreatedBy !== userId) {
-                    steps.push(`Admin bid-${bid.newValue}`)
+                    steps.push({
+                        label: `Admin bid-${bid.newValue}`,
+                        date: moment(bid.createdAt).format('DD/MM/yyyy, h:mm:ss a')
+                    })
                     if (bid.bidStatus === 3) {
-                        steps.push(`User Rejected bid-${bid.newValue}`)
+                        steps.push({
+                            label: `Your Rejected bid-${bid.newValue}`,
+                            date: moment(bid.updatedAt).format('DD/MM/yyyy, h:mm:ss a')
+                        })
+                        doneFlag = true
                     }
                 } else {
-                    steps.push(`Your bid-${bid.newValue}`)
+                    steps.push({
+                        label: `Your bid-${bid.newValue}`,
+                        date: moment(bid.createdAt).format('DD/MM/yyyy, h:mm:ss a')
+                    })
                     if (bid.bidStatus === 3) {
-                        steps.push(`Admin Rejected bid-${bid.newValue}`)
+                        steps.push({
+                            label: `Admin Rejected bid-${bid.newValue}`,
+                            date: moment(bid.updatedAt).format('DD/MM/yyyy, h:mm:ss a')
+                        })
+                        doneFlag = true
                     }
                 }
 
             })
-            activeStep = steps.length - 1;
-            if (details.bidHistory[0].bidStatus !== 3) {
-                steps.push('Bid Accepted')
+            if (!doneFlag) {
+                steps.push({
+                    label: 'Bidding in progress'
+                })
+                activeStep = steps.length - 1;
             }
+            else activeStep = steps.length;
+            // if (details.bidHistory[0].bidStatus !== 3) {
+            //     steps.push('Bid Accepted')
+            // }
         }
         setBidStepperDetails({
             steps,
@@ -118,10 +146,22 @@ const ProductDetails = () => {
     }
     const updateacceptedStepperDetails = (details) => {
         setAcceptedStepperDetails({
-            steps: [`Accepted bid - ${details.acceptedAmount}`, ...OrderStatus],
-            activeStep: productdetails.orderStatus - 1
+            steps: [{
+                label: `Accepted bid - ${details.acceptedAmount}`,
+                date: moment(details?.bidHistory[0]?.updatedAt).format('DD/MM/yyyy, h:mm:ss a')
+            },
+            ...OrderStatus.map(status => {
+                return {
+                    label: status,
+                    date: details.pickedUpDate ?
+                        moment(details.pickedUpDate).format('DD/MM/yyyy, h:mm:ss a') : null
+                }
+            })
+            ],
+            activeStep: details.orderStatus
         })
     }
+    console.log(acceptedStepperDetails)
     const handleEditProduct = () => {
         setOpenSellModal(true)
     }
@@ -186,7 +226,7 @@ const ProductDetails = () => {
                             <HorizontalStepper steps={bidStepperDetails.steps}
                                 activeStep={bidStepperDetails.activeStep} /> :
                             <HorizontalStepper steps={acceptedStepperDetails.steps}
-                                activeStep={productdetails.orderStatus - 1} />
+                                activeStep={acceptedStepperDetails.activeStep} />
                     }
                     {/* <VerticalStepper steps={steps} /> */}
                 </Box>

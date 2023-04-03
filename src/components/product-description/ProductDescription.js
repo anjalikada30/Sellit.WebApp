@@ -1,4 +1,5 @@
 import { Grid, Typography } from "@mui/material";
+import moment from "moment";
 import React from "react";
 
 const ProductDescription = ({ data }) => {
@@ -51,6 +52,18 @@ const ProductDescription = ({ data }) => {
                 <Typography variant="body2" gutterBottom fontSize='0.8rem'>
                     <b>Pickup Address:&nbsp;&nbsp;&nbsp;</b>
                     <Typography variant="span" gutterBottom fontSize='0.8rem'>{data?.pickupAddress}</Typography>
+                </Typography>
+            </Grid>
+            <Grid item >
+                <Typography variant="body2" gutterBottom fontSize='0.8rem'>
+                    <b>Created Date:&nbsp;&nbsp;&nbsp;</b>
+                    <Typography variant="span" gutterBottom fontSize='0.8rem'>{moment(data.createdAt).format('DD/MM/yyyy, h:mm:ss a')}</Typography>
+                </Typography>
+            </Grid>
+            <Grid item >
+                <Typography variant="body2" gutterBottom fontSize='0.8rem'>
+                    <b>Last modified:&nbsp;&nbsp;&nbsp;</b>
+                    <Typography variant="span" gutterBottom fontSize='0.8rem'>{moment(data?.updatedAt).format('DD/MM/yyyy, h:mm:ss a')}</Typography>
                 </Typography>
             </Grid>
         </Grid>

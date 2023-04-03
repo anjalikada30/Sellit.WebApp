@@ -8,6 +8,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import sampleProduct from '../../assets/sampleproduct.png';
 import { Box, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 const Img = styled('img')({
     margin: 'auto',
@@ -19,7 +20,7 @@ const ProductBidStatus = {
     1: 'CREATED',
     2: 'ACCEPTED',
     3: 'REJECTED',
-    4: 'MODIFIED'
+    4: 'In progress'
 };
 const ProductBidColor = {
     1: 'primary',
@@ -43,7 +44,7 @@ const ProductListItem = ({ data, margin, backRoute, categories }) => {
             sx={{
                 p: 2,
                 margin: margin ? 1 : 'auto',
-                maxWidth: 500,
+                maxWidth: 470,
                 flexGrow: 1,
                 backgroundColor: (theme) =>
                     theme.palette.mode === 'dark' ? '#1A2027' : '#d3d3d347',
@@ -92,6 +93,12 @@ const ProductListItem = ({ data, margin, backRoute, categories }) => {
                         <Typography variant="subtitle1" component="div" sx={{ fontSize: '0.8rem' }}>
                             Order status: {OrderStatus[data.orderStatus]}
                         </Typography>
+                        {
+                            data.orderStatus === 1 ?
+                                <Typography variant="subtitle1" component="div" sx={{ fontSize: '0.8rem' }}>
+                                    Last modified: {moment(data.updatedAt).format('DD/MM/yyyy, h:mm:ss a')}
+                                </Typography> : null
+                        }
                         {/* <IconButton
                             size="small"
                             aria-label="bookmark"
