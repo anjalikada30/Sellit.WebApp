@@ -192,7 +192,7 @@ function Header() {
                       onClose={handleCloseUserMenu}
                     >
                       {settings.map((setting) => (
-                        <MenuItem key={setting.label} onClick={() => handleCloseUserMenu(setting.label)} link>
+                        <MenuItem key={setting.label} onClick={() => handleCloseUserMenu(setting.label)}>
                           <Typography textAlign="center" component={Link} to={setting.route}
                             sx={{ color: 'inherit', textDecoration: 'none' }} >
                             {setting.label}

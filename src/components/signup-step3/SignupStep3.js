@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Divider, Grid, TextField } from '@mui/material';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { bankTypes } from '../../data/bankTypes';
 
@@ -16,10 +16,29 @@ const SignupStep3 = ({
     const { signupmessage } = useSelector(state => state.message);
     const margin = "normal";
     const variant = "outlined";
+
+    // Check if all values are not empty and if there are some errors
+    const isError = useCallback(
+        () => {
+            if (bankType.value === "1") {
+                return Object.keys({ bankAccountNumber, ifscCode, accountHolderName, bankType }).some(
+                    (name) =>
+                        (formValues[name].required && !formValues[name].value) ||
+                        formValues[name].error
+                )
+            } else return Object.keys({ UPI, bankType }).some(
+                (name) =>
+                    (formValues[name].required && !formValues[name].value) ||
+                    formValues[name].error
+            )
+        },
+        [bankAccountNumber, ifscCode, accountHolderName, UPI, bankType]
+    );
+
     return (
         <>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={9} sx={{ pt: "5px" }}>
+                <Grid item xs={12} sm={12} sx={{ pt: "5px" }}>
                     <TextField
                         variant={variant}
                         margin={margin}
@@ -109,7 +128,7 @@ const SignupStep3 = ({
             {
                 bankType?.value === "2" ?
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6} sx={{ pt: "5px" }}>
+                        <Grid item xs={12} sm={12} sx={{ pt: "5px" }}>
                             <TextField
                                 variant={variant}
                                 margin={margin}
@@ -157,10 +176,9 @@ const SignupStep3 = ({
                         <Button
                             variant="contained"
                             sx={{ mt: 3, ml: 1 }}
-                            //disabled={isError()}
+                            disabled={isError()}
                             color="primary"
-                            //onClick={!isError() ? handleEdit : () => null}
-                            onClick={handleEdit}
+                            onClick={!isError() ? handleEdit : () => null}
                         >
                             Edit
                         </Button> : null

@@ -1,11 +1,11 @@
 import { Alert, Box, Button, Grid, IconButton, Modal, Snackbar, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './styles.css';
 import EditIcon from '@mui/icons-material/Edit';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { user } from '../../data/user';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { EditUserMobile, Loader, SignupStep1, SignupStep2, SignupStep3 } from "../../components";
+import { EditPassword, EditUserMobile, Loader, SignupStep1, SignupStep2, SignupStep3, VerifyMobileOtp } from "../../components";
 import userService from "../../services/user.service";
 
 const style = {
@@ -19,13 +19,23 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
+const otpStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 260,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+};
 const initialValues = (user) => {
     return {
         name: {
             value: user?.name,
             error: '',
             required: true,
-            validate: 'text',
+            //validate: 'text',
             minLength: 2,
             maxLength: 20,
             helperText: 'Custom error message'
@@ -69,7 +79,7 @@ const initialValues = (user) => {
             value: user?.addressLine1,
             error: '',
             required: true,
-            validate: 'text',
+            //validate: 'text',
             minLength: 3,
             maxLength: 20
         },
@@ -77,7 +87,7 @@ const initialValues = (user) => {
             value: user?.landmark,
             error: '',
             required: true,
-            validate: 'text',
+            //validate: 'text',
             minLength: 3,
             maxLength: 20
         },
@@ -116,36 +126,65 @@ const initialValues = (user) => {
         bankAccountNumber: {
             value: user?.bankAccountNumber,
             error: '',
-            required: false,
-            validate: 'text',
+            required: true,
+            validate: 'bankacc',
             minLength: 3,
             maxLength: 20
         },
         ifscCode: {
             value: user?.ifscCode,
             error: '',
-            required: false,
-            validate: 'text',
+            required: true,
+            validate: 'ifsc',
             minLength: 3,
             maxLength: 20
         },
         accountHolderName: {
             value: user?.accountHolderName,
             error: '',
-            required: false,
-            validate: 'text',
+            required: true,
+            //validate: 'text',
             minLength: 3,
             maxLength: 20
         },
         UPI: {
             value: user?.UPI,
             error: '',
-            required: false,
-            validate: 'text',
+            required: true,
+            validate: 'upi',
             minLength: 3,
             maxLength: 20
         },
-
+        bankType: {
+            value: user?.UPI ? "2" : "1",
+            error: '',
+            required: true,
+            validate: 'select'
+        },
+        currentPassword: {
+            value: '',
+            error: '',
+            required: true,
+            validate: 'password',
+            minLength: 6,
+            maxLength: 20
+        },
+        newPassword: {
+            value: '',
+            error: '',
+            required: true,
+            validate: 'password',
+            minLength: 6,
+            maxLength: 20
+        },
+        confirmNewPassword: {
+            value: '',
+            error: '',
+            required: true,
+            validate: 'confirmPassword',
+            minLength: 6,
+            maxLength: 20
+        }
 
     }
 }
@@ -154,9 +193,14 @@ const UserProfile = () => {
     const [editKycDetails, setEditKycDetails] = useState(false)
     const [editBankDetails, setEditBankDetails] = useState(false)
     const [editMobileDetails, setEditMobileDetails] = useState(false)
-    const [formValues, setFormValues] = useState(initialValues(user))
+    const [formValues, setFormValues] = useState(initialValues({}))
+    const [userDetails, setUserDetails] = useState({})
     const [loading, setLoading] = useState(false)
     const [snackDetails, setSnackDetails] = useState({})
+    const [showVerifyOtp, setShowVerifyOtp] = useState(false)
+    const [otpMessage, setOtpMessage] = useState(false)
+    const [editPassword, setEditPassword] = useState(false)
+    const [passwordMessage, setPasswordMessage] = useState(null)
     const isText = /^([a-zA-Z0-9 ]+)$/;
     const isEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     const isPhone = /^[5-9]\d{9}$/gi;
@@ -164,6 +208,30 @@ const UserProfile = () => {
     const isNumber = /^\d+$/;
     const isAadharNumber = /^[2-9]{1}[0-9]{3}\s{1}[0-9]{4}\s{1}[0-9]{4}$/;
     const isPan = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/;
+    const isBankAccNum = /^\d{9,18}$/;
+    const isIfsccode = /^[A-Za-z]{4}[a-zA-Z0-9]{7}$/;
+    const isUpi = /[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}/;
+
+    useEffect(() => {
+        fetchUserProfile()
+    }, [])
+
+    const fetchUserProfile = async () => {
+        setLoading(true)
+        try {
+            const response = await userService.getUserProfile()
+            setLoading(false)
+            setUserDetails(response?.data?.response)
+            setFormValues(initialValues(response?.data?.response?.user))
+        } catch (err) {
+            setLoading(false)
+            setSnackDetails({
+                show: true,
+                severity: 'error',
+                message: "Unable to fetch user profile. Please try again later"
+            })
+        }
+    }
 
     const renderPersonalDetails = () => (
         <Grid container direction="column" spacing={1} sx={{
@@ -187,6 +255,11 @@ const UserProfile = () => {
                             onClick={() => setEditPersonalDetails(true)}>
                             Edit
                         </Button>
+                        <Button variant="outlined" startIcon={<BorderColorIcon />}
+                            onClick={() => setEditPassword(true)}
+                            sx={{ ml: 1 }}>
+                            Edit Password
+                        </Button>
                     </Grid>
                 </Grid>
             </Grid>
@@ -198,13 +271,13 @@ const UserProfile = () => {
                         <Typography variant="div" gutterBottom className="profile-item">
                             <b>Name:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value" >{user.name}</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value" >{userDetails?.user?.name}</Typography>
                     </Grid>
                     <Grid item>
                         <Typography variant="div" gutterBottom className="profile-item">
                             <b>Email:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.email}</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value">{userDetails?.user?.email}</Typography>
                     </Grid>
                     {/* <Grid item>
                         <Typography variant="div" gutterBottom className="profile-item">
@@ -219,37 +292,37 @@ const UserProfile = () => {
                         <Typography variant="div" gutterBottom className="profile-item">
                             <b>Address Line1:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.addressLine1}</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value">{userDetails?.user?.addressLine1}</Typography>
                     </Grid>
                     <Grid item>
                         <Typography variant="div" gutterBottom className="profile-item">
                             <b>Landmark:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.landmark}</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value">{userDetails?.user?.landmark}</Typography>
                     </Grid>
                     <Grid item>
                         <Typography variant="div" gutterBottom className="profile-item">
                             <b>Zipcode:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.zipCode}</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value">{userDetails?.user?.zipCode}</Typography>
                     </Grid>
                     <Grid item>
                         <Typography variant="div" gutterBottom className="profile-item">
                             <b>City:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.city}</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value">{userDetails?.user?.city}</Typography>
                     </Grid>
                     <Grid item>
                         <Typography variant="div" gutterBottom className="profile-item">
                             <b>State:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.state}</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value">{userDetails?.user?.state}</Typography>
                     </Grid>
                     <Grid item>
                         <Typography variant="div" gutterBottom className="profile-item">
                             <b>Country:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.country}</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value">{userDetails?.user?.country}</Typography>
                     </Grid>
                 </Grid>
             </Grid>
@@ -272,7 +345,7 @@ const UserProfile = () => {
                         <Typography variant="div" gutterBottom className="profile-item">
                             <b>Phone Number:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.mobile}</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value">{userDetails?.user?.mobile}</Typography>
                     </Grid>
                     <Grid item>
                         <Button variant="outlined" startIcon={<BorderColorIcon />}
@@ -284,6 +357,10 @@ const UserProfile = () => {
             </Grid>
         </Grid>
     )
+
+    const handleViewIdentityImage = () => {
+
+    }
 
     const renderKycDetails = () => (
         <Grid container direction="column" spacing={1} sx={{
@@ -318,13 +395,19 @@ const UserProfile = () => {
                         <Typography variant="div" gutterBottom className="profile-item">
                             <b>Proof type:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value" >Aadhar</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value" >
+                            {Number(userDetails?.user?.identityProofType) === 2 ? "Aadhar Number" :
+                                "Permanent Account Number(PAN)"}</Typography>
                     </Grid>
                     <Grid item>
                         <Typography variant="div" gutterBottom className="profile-item">
-                            <b>Aadhar Number:</b>
+                            <b>{Number(userDetails?.user?.identityProofType) === 2 ? "Aadhar Number" :
+                                "Permanent Account Number(PAN)"}:</b>
                         </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.identityProofNumber}</Typography>
+                        <Typography variant="span" gutterBottom className="profile-value">{userDetails?.user?.identityProofNumber}</Typography>
+                        <IconButton aria-label="view" sx={{ ml: 2 }} onClick={handleViewIdentityImage}>
+                            <VisibilityIcon />
+                        </IconButton>
                     </Grid>
                 </Grid>
             </Grid>
@@ -360,30 +443,42 @@ const UserProfile = () => {
                 <Grid container direction="column" spacing={1} className="personal-details" sx={{
                     pl: 1
                 }}>
-                    <Grid item >
-                        <Typography variant="div" gutterBottom className="profile-item">
-                            <b>Account Holder Name:</b>
-                        </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value" >{user.accountHolderName}</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="div" gutterBottom className="profile-item">
-                            <b>Account Number:</b>
-                        </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.bankAccountNumber}</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="div" gutterBottom className="profile-item">
-                            <b>IFSC Code:</b>
-                        </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.ifscCode}</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="div" gutterBottom className="profile-item">
-                            <b>UPI ID:</b>
-                        </Typography>
-                        <Typography variant="span" gutterBottom className="profile-value">{user.UPI ? user.UPI : "-"}</Typography>
-                    </Grid>
+                    {
+                        userDetails?.user?.UPI ?
+                            <Grid item>
+                                <Typography variant="div" gutterBottom className="profile-item">
+                                    <b>UPI ID:</b>
+                                </Typography>
+                                <Typography variant="span" gutterBottom className="profile-value">{userDetails?.user?.UPI}</Typography>
+                            </Grid> : null
+                    }
+                    {
+                        !userDetails?.user?.UPI ?
+                            <Grid item >
+                                <Typography variant="div" gutterBottom className="profile-item">
+                                    <b>Account Holder Name:</b>
+                                </Typography>
+                                <Typography variant="span" gutterBottom className="profile-value" >{user.accountHolderName}</Typography>
+                            </Grid> : null
+                    }
+                    {
+                        !userDetails?.user?.UPI ?
+                            <Grid item>
+                                <Typography variant="div" gutterBottom className="profile-item">
+                                    <b>Account Number:</b>
+                                </Typography>
+                                <Typography variant="span" gutterBottom className="profile-value">{user.bankAccountNumber}</Typography>
+                            </Grid> : null
+                    }
+                    {
+                        !userDetails?.user?.UPI ?
+                            <Grid item>
+                                <Typography variant="div" gutterBottom className="profile-item">
+                                    <b>IFSC Code:</b>
+                                </Typography>
+                                <Typography variant="span" gutterBottom className="profile-value">{user.ifscCode}</Typography>
+                            </Grid> : null
+                    }
                 </Grid>
             </Grid>
         </Grid>
@@ -400,10 +495,22 @@ const UserProfile = () => {
     const handleEditMobileClose = () => {
         setEditMobileDetails(false)
     }
-    const handleChange = (event, image) => {
-        let { type, name, value } = event.target;
-        if (image) name = "identityProofImageUri";
-        const fieldValue = !image ? value : event.target.files[0];
+    const handleVerifyOtpClose = () => {
+        setShowVerifyOtp(false)
+        setOtpMessage(null)
+    }
+    const handleEditpasswordClose = () => {
+        setShowVerifyOtp(false)
+        setPasswordMessage(null)
+    }
+    const handleChange = (event, image, imageUri) => {
+        let name, value;
+        if (imageUri) name = "identityProofImageUri";
+        else {
+            name = event.target.name;
+            value = event.target.value;
+        }
+        const fieldValue = !imageUri ? value : imageUri;
         const fieldName = initialValues()[name];
         if (!fieldName) return;
 
@@ -466,7 +573,29 @@ const UserProfile = () => {
                     break;
 
                 case "image":
-                    if (!value) error = helperText || "Please select an image.";
+                    if (!imageUri) error = helperText || "Please select an image.";
+                    break;
+
+                case "bankacc":
+                    if (value && !isBankAccNum.test(value))
+                        error = helperText || "Please enter a valid account number.";
+                    break;
+
+                case "ifsc":
+                    if (value && !isIfsccode.test(value))
+                        error = helperText || "Please enter a valid ifsc code.";
+                    break;
+
+                case "upi":
+                    if (value && !isUpi.test(value))
+                        error = helperText || "Please enter a valid upi id.";
+                    break;
+
+                case "confirmPassword":
+                    if (value !== formValues.newPassword.value)
+                        error =
+                            helperText ||
+                            "Password Mismatch!";
                     break;
 
                 default:
@@ -506,6 +635,7 @@ const UserProfile = () => {
                 severity: 'success',
                 message: "Edited personal details successfully!"
             })
+            fetchUserProfile()
         } catch (error) {
             setLoading(false)
             setSnackDetails({
@@ -515,17 +645,134 @@ const UserProfile = () => {
             })
         }
     }
-    const handleEditKycDetails = () => {
-        console.log('edited')
+    const handleEditKycDetails = async () => {
+        const data = {
+            "name": formValues.name.value,
+            "email": formValues.email.value,
+            "identityProofType": formValues.identityProofType.value,
+            "identityProofNumber": formValues.identityProofNumber.value,
+            "identityProofImageUri": formValues.identityProofImageUri.value,
+            "addressLine1": formValues.addressLine1.value,
+            "landmark": formValues.landmark.value,
+            "city": formValues.city.value,
+            "state": formValues.state.value,
+            "zipCode": formValues.zipCode.value,
+            "country": formValues.country.value
+        }
         setEditKycDetails(false)
+        setLoading(true)
+        try {
+            await userService.editPersonalDetails(data)
+            setLoading(false)
+            setSnackDetails({
+                show: true,
+                severity: 'success',
+                message: "Edited kyc details successfully!"
+            })
+            fetchUserProfile()
+        } catch (error) {
+            setLoading(false)
+            setSnackDetails({
+                show: true,
+                severity: 'error',
+                message: "Unable to edit kyc details. Please try again later."
+            })
+        }
     }
-    const handleEditBankDetails = () => {
-        console.log('edited')
+    const handleEditBankDetails = async () => {
+        let data = {}
+        if (formValues.bankType.value === "1") {
+            data = {
+                "bankAccountNumber": formValues.bankAccountNumber.value,
+                "ifscCode": formValues.ifscCode.value,
+                "accountHolderName": formValues.accountHolderName.value,
+            }
+        } else {
+            data = {
+                "UPI": formValues.UPI.value
+            }
+        }
         setEditBankDetails(false)
+        setLoading(true)
+        try {
+            await userService.editBankDetails(data)
+            setLoading(false)
+            setSnackDetails({
+                show: true,
+                severity: 'success',
+                message: "Edited bank details successfully!"
+            })
+            fetchUserProfile()
+        } catch (error) {
+            setLoading(false)
+            setSnackDetails({
+                show: true,
+                severity: 'error',
+                message: "Unable to edit bank details. Please try again later."
+            })
+        }
     }
-    const handleEditMobileDetails = () => {
-        console.log('edited')
-        setEditMobileDetails(false)
+    const handleEditMobileDetails = async () => {
+        if (userDetails?.user.mobile !== formValues?.mobile?.value) {
+            const data = {
+                "mobile": formValues.mobile.value
+            }
+            setEditMobileDetails(false)
+            setLoading(true)
+            try {
+                await userService.editMobileDetails(data)
+                setLoading(false)
+                setShowVerifyOtp(true)
+            } catch (error) {
+                setLoading(false)
+                setSnackDetails({
+                    show: true,
+                    severity: 'error',
+                    message: error?.response?.data?.message
+                })
+            }
+        }
+    }
+    const handleVerifyOtpDetails = async (otp) => {
+        setLoading(true)
+        const data = {
+            otp: otp
+        }
+        try {
+            await userService.verifyMobileOtp(data)
+            setLoading(false)
+            setShowVerifyOtp(false)
+            setSnackDetails({
+                show: true,
+                severity: 'success',
+                message: "Edited mobile number successfully!"
+            })
+            fetchUserProfile()
+        } catch (error) {
+            setLoading(false)
+            setOtpMessage(error?.response?.data?.message)
+        }
+    }
+    const handleEditPassword = async () => {
+        setLoading(true)
+        const data = {
+            currentPassword: formValues.currentPassword.value,
+            newPassword: formValues.newPassword.value
+        }
+        try {
+            await userService.updatePassword(data)
+            setEditPassword(false)
+            setLoading(false)
+            setSnackDetails({
+                show: true,
+                severity: 'success',
+                message: "Edited password successfully!"
+            })
+            fetchUserProfile()
+        } catch (error) {
+            setLoading(false)
+            setPasswordMessage(error?.response?.data?.message)
+        }
     }
     const personalDetailsValues = {
         formValues,
@@ -554,6 +801,19 @@ const UserProfile = () => {
         handleClose: handleEditMobileClose,
         handleEdit: handleEditMobileDetails
     }
+    const verifyOtpValues = {
+        formValues,
+        handleClose: handleVerifyOtpClose,
+        handleSubmit: handleVerifyOtpDetails,
+        otpmessage: otpMessage
+    }
+    const passwordDetailsValues = {
+        formValues,
+        handleClose: handleEditpasswordClose,
+        handleEdit: handleEditPassword,
+        handleChange: handleChange,
+        passwordMessage: passwordMessage
+    }
     const handleSnackClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -576,12 +836,12 @@ const UserProfile = () => {
                 }}>
                     <Grid item>
                         <Typography gutterBottom variant="subtitle1" component="div" fontWeight='bold' fontSize={"1.2rem"}>
-                            Sample User
+                            {userDetails?.user?.name}
                         </Typography>
                     </Grid>
                     <Grid item>
                         <Button variant="outlined" sx={{ cursor: 'none' }} color="success">
-                            Earned Amount : 100000
+                            Earned Amount : {userDetails?.totalEarning}
                         </Button>
                     </Grid>
                 </Grid>
@@ -668,6 +928,40 @@ const UserProfile = () => {
                                 Edit Phone Number
                             </Typography>
                             <EditUserMobile {...mobileDetailsValues} />
+                        </Box>
+
+                    </Modal> : null
+            }
+            {
+                showVerifyOtp ?
+                    <Modal
+                        open={true}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                        onClose={handleVerifyOtpClose}
+                    >
+                        <Box sx={otpStyle}>
+                            <Typography id="modal-modal-title" variant="h6" component="h6" sx={{ mb: 1.5 }}>
+                                Verify Otp
+                            </Typography>
+                            <VerifyMobileOtp {...verifyOtpValues} />
+                        </Box>
+
+                    </Modal> : null
+            }
+            {
+                editPassword ?
+                    <Modal
+                        open={true}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                        onClose={handleEditpasswordClose}
+                    >
+                        <Box sx={style}>
+                            <Typography id="modal-modal-title" variant="h6" component="h6" sx={{ mb: 1.5 }}>
+                                Edit Password
+                            </Typography>
+                            <EditPassword {...passwordDetailsValues} />
                         </Box>
 
                     </Modal> : null

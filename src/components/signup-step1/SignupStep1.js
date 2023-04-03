@@ -24,8 +24,8 @@ const SignupStep1 = ({
                 zipCode, city, state, country, password, confirmPassword
             }).some(
                 (name) =>
-                    (formValues[name].required && !formValues[name].value) ||
-                    formValues[name].error
+                    (formValues[name]?.required && !formValues[name]?.value) ||
+                    formValues[name]?.error
             ),
         [name, email, mobile, addressLine1, landmark,
             zipCode, city, state, country, password, confirmPassword]
@@ -119,7 +119,7 @@ const SignupStep1 = ({
                                 label="Confirm Password"
                                 name="confirmPassword"
                                 placeholder="confirm password"
-                                type="text"
+                                type="password"
                                 size='small'
                                 value={confirmPassword.value}
                                 onChange={handleChange}

@@ -64,7 +64,7 @@ function CompletedBids() {
             }
         };
     }, [lastElement]);
-
+    
     const fetchProducts = async (data, scrolling) => {
         setLoading(true)
         try {

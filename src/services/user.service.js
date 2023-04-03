@@ -63,6 +63,30 @@ const resetPassword = (data) => {
   return axios.post(API_URL + "auth/reset-password", data)
 };
 
+const getUserProfile = () => {
+  return axios.get(API_URL + "/users/profile", { headers: authHeader() });
+};
+
+const editPersonalDetails = (data) => {
+  return axios.put(API_URL + "/users/profile", data, { headers: authHeader() });
+}
+
+const editBankDetails = (data) => {
+  return axios.put(API_URL + "/users/fund", data, { headers: authHeader() });
+}
+
+const editMobileDetails = (data) => {
+  return axios.put(API_URL + "/users/mobile", data, { headers: authHeader() });
+}
+
+const verifyMobileOtp = (data) => {
+  return axios.post(API_URL + "users/verify-mobile-otp", data, { headers: authHeader() });
+};
+
+const updatePassword = (data) => {
+  return axios.put(API_URL + "users/update-password", data, { headers: authHeader() })
+}
+
 export default {
   uploadImage,
   getAllProducts,
@@ -74,5 +98,11 @@ export default {
   updateBid,
   updateProduct,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  getUserProfile,
+  editPersonalDetails,
+  editBankDetails,
+  editMobileDetails,
+  verifyMobileOtp,
+  updatePassword
 };

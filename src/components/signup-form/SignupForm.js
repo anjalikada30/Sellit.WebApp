@@ -17,7 +17,7 @@ const initialValues = {
         value: '',
         error: '',
         required: true,
-        validate: 'text',
+        //validate: 'text',
         minLength: 2,
         //maxLength: 20,
         helperText: 'Custom error message'
@@ -63,7 +63,7 @@ const initialValues = {
         value: '',
         error: '',
         required: true,
-        validate: 'text',
+        //validate: 'text',
         minLength: 3,
         maxLength: 20
     },
@@ -77,7 +77,7 @@ const initialValues = {
         value: '',
         error: '',
         required: true,
-        validate: 'text',
+        //validate: 'text',
         minLength: 3,
         maxLength: 20
     },
@@ -85,7 +85,7 @@ const initialValues = {
         value: '',
         error: '',
         required: true,
-        validate: 'text',
+        //validate: 'text',
         minLength: 3,
         maxLength: 20
     },
@@ -101,7 +101,7 @@ const initialValues = {
         value: 'India',
         error: '',
         required: true,
-        validate: 'text',
+        //validate: 'text',
     },
     identityProofType: {
         value: '',
@@ -147,7 +147,7 @@ const initialValues = {
         value: '',
         error: '',
         required: false,
-        validate: 'text',
+        //validate: 'text',
         minLength: 3,
         maxLength: 20
     },
@@ -318,17 +318,21 @@ const SignupForm = () => {
             "country": formValues.country.value
         }
         if (formValues.bankType?.value === "1") {
-            data = {
-                ...data,
-                "bankAccountNumber": formValues.bankAccountNumber.value,
-                "ifscCode": formValues.ifscCode.value,
-                "accountHolderName": formValues.accountHolderName.value
-            }
-        } else {
-            data = {
-                ...data,
-                "UPI": formValues.UPI.value,
-            }
+            if (formValues.bankAccountNumber.value &&
+                formValues.ifscCode.value &&
+                formValues.accountHolderName.value)
+                data = {
+                    ...data,
+                    "bankAccountNumber": formValues.bankAccountNumber.value,
+                    "ifscCode": formValues.ifscCode.value,
+                    "accountHolderName": formValues.accountHolderName.value
+                }
+        } else if (formValues.UPI.value) {
+            if (formValues.UPI.value)
+                data = {
+                    ...data,
+                    "UPI": formValues.UPI.value,
+                }
         }
         setLoading(true)
         dispatch(register({ ...data }))
@@ -365,7 +369,7 @@ const SignupForm = () => {
     return (
         <>
             {activeStep === labels.length ? (
-                <Success text={"Thank you!"}/>
+                <Success text={"Thank you!"} />
             ) : (
                 <>
                     <Box sx={{ my: 1 }}>

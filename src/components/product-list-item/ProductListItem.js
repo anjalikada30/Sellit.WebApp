@@ -61,7 +61,7 @@ const ProductListItem = ({ data, margin, backRoute }) => {
                             </Box>
                             <Box sx={{ width: '200px', height: '30px', overflow: 'hidden' }}>
                                 <Typography variant="body2" gutterBottom fontSize='0.7rem'>
-                                    {data.category.name}
+                                    {data.category?.name}
                                 </Typography>
                             </Box>
                         </Grid>

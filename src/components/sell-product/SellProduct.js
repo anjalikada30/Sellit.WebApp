@@ -6,6 +6,7 @@ import { Modal, Grid, TextField, Typography, Snackbar, Alert } from '@mui/materi
 import UploadIcon from '@mui/icons-material/Upload';
 import userService from '../../services/user.service';
 import { Loader } from '../loader';
+import { useNavigate } from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -106,9 +107,11 @@ const SellProduct = ({ handleClose, action, details }) => {
   const [files, setFiles] = useState()
   const [snackDetails, setSnackDetails] = useState({})
   const [categories, setCategories] = useState([])
+  const [types, setTypes] = useState([])
   const isText = /^([a-zA-Z0-9 ]+)$/;
   const isNumber = /^\d+$/;
   const url = 'https://sell-it-bucket.s3.ap-northeast-1.amazonaws.com/'
+  const navigate = useNavigate();
   useEffect(() => {
     fetchProductCategories()
   }, [])
@@ -198,6 +201,10 @@ const SellProduct = ({ handleClose, action, details }) => {
         error: error
       }
     })
+    if (name === 'categoryId') {
+      const category = categories.find(category => category._id === value)
+      setTypes(category.subCategories)
+    }
   }
   const handleImageChange = (event) => {
     let images = [];
@@ -253,8 +260,10 @@ const SellProduct = ({ handleClose, action, details }) => {
     }
     setLoading(true)
     try {
-      if (action !== 'edit')
+      if (action !== 'edit') {
         await userService.sellProduct(data)
+        navigate(`/${window.location.href.split('/')[3]}`)
+      }
       else {
         data.productId = details._id;
         await userService.updateProduct(data)
@@ -277,7 +286,7 @@ const SellProduct = ({ handleClose, action, details }) => {
 
     setSnackDetails({});
   };
-
+  
   return (
     <div>
       <Modal
@@ -369,9 +378,11 @@ const SellProduct = ({ handleClose, action, details }) => {
                 required={formValues.type.required}
               >
                 <option value=""> </option>
-                <option value="type1">Type1</option>
-                <option value="type2">Type2</option>
-                <option value="type3">Type3</option>
+                {
+                  types.map(type => (
+                    <option value={type._id} key={type._id}>{type.name}</option>
+                  ))
+                }
               </TextField>
             </Grid>
             <Grid item xs={12} sm={6}>

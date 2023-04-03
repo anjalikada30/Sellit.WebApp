@@ -32,9 +32,10 @@ const SignupStep2 = ({
             ),
         [identityProofType, identityProofNumber, identityProofImageUri]
     );
+    
     const handleImageChange = (event) => {
         setFile(event.target.files[0])
-        setPreviewImage('')
+        setPreviewImage(null)
     }
     const handleUpload = async () => {
         let formData = new FormData()
@@ -162,7 +163,7 @@ const SignupStep2 = ({
                         <Button
                             variant="contained"
                             sx={{ mt: 3, ml: 1 }}
-                            disabled={isError()}
+                            disabled={isError() || !previewImage}
                             color="primary"
                             onClick={!isError() ? handleEdit : () => null}
                         >

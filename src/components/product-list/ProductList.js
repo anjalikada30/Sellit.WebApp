@@ -73,7 +73,7 @@ function ProductsList({ title, products, searchObject, handleFilterChange }) {
             <Grid container spacing={1}>
                 {
                     products.results?.map(product => (
-                        <Grid item>
+                        <Grid item key={product._id}>
                             <ProductListItem data={product} backRoute={backRoutes[title]}/>
                         </Grid>
                     ))
