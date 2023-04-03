@@ -23,9 +23,11 @@ function PendingBids() {
         bidStatus: 1
     });
     const [lastElement, setLastElement] = useState(null);
+    const [categories, setCategories] = useState([])
 
     useEffect(() => {
         fetchProducts({ ...searchObject })
+        fetchCategories()
     }, [])
 
     useEffect(() => {
@@ -61,6 +63,11 @@ function PendingBids() {
             }
         };
     }, [lastElement]);
+
+    const fetchCategories = async () => {
+        const response = await userService.getCategories();
+        setCategories(response)
+    }
 
     const fetchProducts = async (data, scrolling) => {
         setLoading(true)
@@ -149,7 +156,8 @@ function PendingBids() {
                                 <Item>
                                     <ProductsList title={'Pending Bids'} products={products}
                                         searchObject={searchObject}
-                                        handleFilterChange={handleFilterChange} />
+                                        handleFilterChange={handleFilterChange} 
+                                        categories={categories}/>
                                     {
                                         !loading &&
                                             pageNum <= totalPages ? (

@@ -85,7 +85,7 @@ const initialValues = (details) => {
       required: true,
       //validate: 'text',
       minLength: 3,
-      maxLength: 20
+      maxLength: 1000
     },
     images: {
       value: details?.images ?

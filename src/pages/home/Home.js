@@ -8,6 +8,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Link } from 'react-router-dom';
 import { Loader, NoBid, ProductListItem } from '../../components';
 import UserService from '../../services/user.service'
+import userService from '../../services/user.service';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "#a8bfed",
@@ -17,44 +18,48 @@ const Item = styled(Paper)(({ theme }) => ({
     height: "14vh"
 }));
 
+const BidCard = ({ name, logo, link }) => {
+    return (
+        <Grid container spacing={1} sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: "14vh",
+            p: 1
+        }}>
+            <Grid item xs={4}>
+                <Box
+                    component="img"
+                    sx={{
+                        height: 64,
+                    }}
+                    alt="sell-it"
+                    src={logo}
+                />
+            </Grid>
+            <Grid item xs={4}>
+                <Typography variant="h6">{name}</Typography>
+            </Grid>
+            <Grid item xs={2}>
+                <Link to={link} state={{ back: "/home" }}>
+                    <Button variant="contained">
+                        <NavigateNextIcon />
+                    </Button>
+                </Link>
+            </Grid>
+        </Grid>
+    )
+}
+
 const Home = () => {
     const [loading, setLoading] = useState(false)
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([])
     const paperStyle = { padding: 20, height: '15vh', width: "95%", margin: "5px" }
-    const BidCard = ({ name, logo, link }) => {
-        return (
-            <Grid container spacing={1} sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: "14vh",
-                p: 1
-            }}>
-                <Grid item xs={4}>
-                    <Box
-                        component="img"
-                        sx={{
-                            height: 64,
-                        }}
-                        alt="sell-it"
-                        src={logo}
-                    />
-                </Grid>
-                <Grid item xs={4}>
-                    <Typography variant="h6">{name}</Typography>
-                </Grid>
-                <Grid item xs={2}>
-                    <Link to={link} state={{ back: "/home" }}>
-                        <Button variant="contained">
-                            <NavigateNextIcon />
-                        </Button>
-                    </Link>
-                </Grid>
-            </Grid>
-        )
-    }
+
     useEffect(() => {
         fetchAllProducts()
+        fetchCategories()
     }, [])
     const fetchAllProducts = async () => {
         setLoading(true)
@@ -65,6 +70,10 @@ const Home = () => {
         } catch (err) {
             setLoading(false)
         }
+    }
+    const fetchCategories = async () => {
+        const response = await userService.getCategories();
+        setCategories(response)
     }
     return (
         <>
@@ -84,7 +93,10 @@ const Home = () => {
 
                                 <Typography variant='h6' sx={{ mb: 2 }}>Latest Bid</Typography>
                                 {/* <Paper elevation={2} style={paperStyle} > */}
-                                <ProductListItem data={products[0]} margin={1} backRoute={"/home"}/>
+                                <ProductListItem data={products[0]}
+                                    margin={1}
+                                    backRoute={"/home"}
+                                    categories={categories} />
                                 {/* </Paper> */}
                             </Box>
                             <Typography variant='h6' sx={{ mt: 1 }}>All Bids</Typography>

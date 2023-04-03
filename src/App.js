@@ -1,6 +1,6 @@
 import './App.css';
 import React, { Suspense } from 'react';
-import { Header, Loader } from './components';
+import { Footer, Header, Loader } from './components';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from "react-redux";
 import store from './store/store';
@@ -81,6 +81,7 @@ function App() {
               />
             </Routes>
           </Suspense>
+          <Footer />
         </div>
       </Provider>
     </BrowserRouter>

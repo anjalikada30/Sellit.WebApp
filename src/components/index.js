@@ -20,3 +20,4 @@ export { ResetPassword } from './reset-password';
 export { Success } from './success';
 export { VerifyMobileOtp } from './verify-mobile-otp';
 export { EditPassword } from './edit-password';
+export { Footer } from './footer';

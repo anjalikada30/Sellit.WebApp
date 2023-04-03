@@ -24,9 +24,11 @@ function CancelledBids() {
         bidStatus: 3
     });
     const [lastElement, setLastElement] = useState(null);
+    const [categories, setCategories] = useState([])
 
     useEffect(() => {
         fetchProducts({ ...searchObject })
+        fetchCategories()
     }, [])
 
     useEffect(() => {
@@ -62,6 +64,11 @@ function CancelledBids() {
             }
         };
     }, [lastElement]);
+
+    const fetchCategories = async () => {
+        const response = await userService.getCategories();
+        setCategories(response)
+    }
 
     const fetchProducts = async (data, scrolling) => {
         setLoading(true)
@@ -151,7 +158,8 @@ function CancelledBids() {
                                 <Item>
                                     <ProductsList title={'Rejected Bids'} products={products}
                                         searchObject={searchObject}
-                                        handleFilterChange={handleFilterChange} />
+                                        handleFilterChange={handleFilterChange} 
+                                        categories={categories}/>
                                     {
                                         !loading &&
                                             pageNum <= totalPages ? (

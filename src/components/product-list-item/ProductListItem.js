@@ -33,7 +33,11 @@ const OrderStatus = {
     3: 'Picked up',
     4: 'Paid'
 };
-const ProductListItem = ({ data, margin, backRoute }) => {
+const ProductListItem = ({ data, margin, backRoute, categories }) => {
+    const getCategoryName = () => {
+        const category = categories?.find(category => category._id === data.categoryId)
+        return category?.name;
+    }
     return (
         <Paper
             sx={{
@@ -61,7 +65,7 @@ const ProductListItem = ({ data, margin, backRoute }) => {
                             </Box>
                             <Box sx={{ width: '200px', height: '30px', overflow: 'hidden' }}>
                                 <Typography variant="body2" gutterBottom fontSize='0.7rem'>
-                                    {data.category?.name}
+                                    {getCategoryName()}
                                 </Typography>
                             </Box>
                         </Grid>

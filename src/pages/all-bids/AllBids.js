@@ -22,9 +22,11 @@ function AllBids() {
     const [snackDetails, setSnackDetails] = React.useState({})
     const [searchObject, setSearchObject] = useState({});
     const [lastElement, setLastElement] = useState(null);
+    const [categories, setCategories] = useState([])
 
     useEffect(() => {
         fetchProducts({})
+        fetchCategories()
     }, [])
 
     useEffect(() => {
@@ -60,6 +62,11 @@ function AllBids() {
             }
         };
     }, [lastElement]);
+
+    const fetchCategories = async () => {
+        const response = await userService.getCategories();
+        setCategories(response)
+    }
 
     const fetchProducts = async (data, scrolling) => {
         setLoading(true)
@@ -148,6 +155,7 @@ function AllBids() {
                                     <ProductsList title={'All Bids'} products={products}
                                         searchObject={searchObject}
                                         handleFilterChange={handleFilterChange}
+                                        categories={categories}
                                     />
                                     {
                                         !loading &&

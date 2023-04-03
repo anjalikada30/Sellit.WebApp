@@ -1,5 +1,5 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { productsData } from '../../data/products';
 import { sortList } from '../../data/sortList';
 import { sortTypes } from '../../data/sortTypes';
@@ -12,15 +12,9 @@ const backRoutes = {
     "Pending Bids": "/pending-bids"
 }
 
-function ProductsList({ title, products, searchObject, handleFilterChange }) {
+function ProductsList({ title, products, searchObject, handleFilterChange, categories }) {
     const variant = 'outlined';
     const margin = 'normal';
-    const handleSortChange = (event) => {
-        // setSearchObject({
-        //     ...searchObject,
-        //     [event.target.name]: event.target.value
-        // })
-    }
 
     return (
         <Box>
@@ -72,9 +66,11 @@ function ProductsList({ title, products, searchObject, handleFilterChange }) {
             </Grid>
             <Grid container spacing={1}>
                 {
-                    products.results?.map(product => (
-                        <Grid item key={product._id}>
-                            <ProductListItem data={product} backRoute={backRoutes[title]}/>
+                    products.results?.map((product, index) => (
+                        <Grid item key={product._id + index}>
+                            <ProductListItem data={product}
+                                backRoute={backRoutes[title]}
+                                categories={categories} />
                         </Grid>
                     ))
                 }

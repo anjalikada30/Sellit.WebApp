@@ -26,9 +26,11 @@ function CompletedBids() {
         minPrice: 0
     });
     const [lastElement, setLastElement] = useState(null);
+    const [categories, setCategories] = useState([])
 
     useEffect(() => {
         fetchProducts({ ...searchObject })
+        fetchCategories()
     }, [])
 
     useEffect(() => {
@@ -64,6 +66,11 @@ function CompletedBids() {
             }
         };
     }, [lastElement]);
+
+    const fetchCategories = async () => {
+        const response = await userService.getCategories();
+        setCategories(response)
+    }
     
     const fetchProducts = async (data, scrolling) => {
         setLoading(true)
@@ -176,7 +183,8 @@ function CompletedBids() {
                                 <Item>
                                     <ProductsList title={'Accepted Bids'} products={products}
                                         searchObject={searchObject}
-                                        handleFilterChange={handleFilterChange} />
+                                        handleFilterChange={handleFilterChange} 
+                                        categories={categories}/>
                                     {
                                         !loading &&
                                             pageNum <= totalPages ? (
