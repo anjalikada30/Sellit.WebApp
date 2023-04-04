@@ -970,7 +970,6 @@ const UserProfile = () => {
 
                     </Modal> : null
             }
-            {console.log(userDetails)}
             {
                 showKycImage ?
                     <Modal

@@ -135,7 +135,10 @@ function Header() {
                   >
                     {pages.map((page) => (
                       <MenuItem key={page.label} onClick={handleCloseNavMenu}>
-                        <Typography textAlign="center">{page.label}</Typography>
+                        <Typography textAlign="center" component={Link} to={page.route}
+                          sx={{ color: 'inherit', textDecoration: 'none' }} >
+                          {page.label}
+                        </Typography>
                       </MenuItem>
                     ))}
                   </Menu>
