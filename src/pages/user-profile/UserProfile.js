@@ -201,6 +201,7 @@ const UserProfile = () => {
     const [otpMessage, setOtpMessage] = useState(false)
     const [editPassword, setEditPassword] = useState(false)
     const [passwordMessage, setPasswordMessage] = useState(null)
+    const [showKycImage, setShowKycImage] = useState(false)
     const isText = /^([a-zA-Z0-9 ]+)$/;
     const isEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     const isPhone = /^[5-9]\d{9}$/gi;
@@ -359,7 +360,7 @@ const UserProfile = () => {
     )
 
     const handleViewIdentityImage = () => {
-
+        setShowKycImage(true)
     }
 
     const renderKycDetails = () => (
@@ -502,6 +503,9 @@ const UserProfile = () => {
     const handleEditpasswordClose = () => {
         setShowVerifyOtp(false)
         setPasswordMessage(null)
+    }
+    const handleKycImageClose = () => {
+        setShowKycImage(false)
     }
     const handleChange = (event, image, imageUri) => {
         let name, value;
@@ -962,6 +966,42 @@ const UserProfile = () => {
                                 Edit Password
                             </Typography>
                             <EditPassword {...passwordDetailsValues} />
+                        </Box>
+
+                    </Modal> : null
+            }
+            {console.log(userDetails)}
+            {
+                showKycImage ?
+                    <Modal
+                        open={true}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                        onClose={handleKycImageClose}
+                    >
+                        <Box sx={style}>
+                            <Grid container spacing={1} direction={'column'}>
+                                <Grid item>
+                                    <Box
+                                        component="img"
+                                        sx={{
+                                            height: 400,
+                                            width: 250
+                                        }}
+                                        alt="kyc image"
+                                        src={userDetails?.user?.identityProofImageUri}
+                                    />
+                                </Grid>
+                                <Grid item display={'flex'} justifyContent={'center'}>
+                                    <Button
+                                        variant="outlined"
+                                        color="error"
+                                        onClick={handleKycImageClose}
+                                    >
+                                        Close
+                                    </Button>
+                                </Grid>
+                            </Grid>
                         </Box>
 
                     </Modal> : null
