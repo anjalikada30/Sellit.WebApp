@@ -7,6 +7,8 @@ import UploadIcon from '@mui/icons-material/Upload';
 import userService from '../../services/user.service';
 import { Loader } from '../loader';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateProductList } from '../../store/actions/app';
 
 const style = {
   position: 'absolute',
@@ -76,7 +78,7 @@ const initialValues = (details) => {
       error: '',
       required: true,
       validate: 'text',
-      minLength: 3,
+      minLength: 1,
       maxLength: 20
     },
     pickupAddress: {
@@ -100,6 +102,7 @@ const SellProduct = ({ handleClose, action, details }) => {
   const variant = 'outlined';
   const margin = 'normal';
   const size = 'small';
+  const dispatch = useDispatch();
   const [previewImages, setPreviewImages] = useState(details?.images ?
     details.images.map(image => image.uri) : []);
   const [formValues, setFormValues] = useState(initialValues(details));
@@ -262,7 +265,7 @@ const SellProduct = ({ handleClose, action, details }) => {
     try {
       if (action !== 'edit') {
         await userService.sellProduct(data)
-        navigate(`/${window.location.href.split('/')[3]}`)
+        dispatch(updateProductList())
       }
       else {
         data.productId = details._id;
@@ -286,7 +289,7 @@ const SellProduct = ({ handleClose, action, details }) => {
 
     setSnackDetails({});
   };
-  
+
   return (
     <div>
       <Modal

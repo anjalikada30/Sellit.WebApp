@@ -4,6 +4,7 @@ import { Filter, Loader, NoBid, ProductsList, ScrollButton } from '../../compone
 import { ArrowBackIosNew } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 import userService from '../../services/user.service';
+import { useSelector } from 'react-redux';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -24,6 +25,7 @@ function PendingBids() {
     });
     const [lastElement, setLastElement] = useState(null);
     const [categories, setCategories] = useState([])
+    const { updateProducts } = useSelector(state => state.app);
 
     useEffect(() => {
         fetchProducts({ ...searchObject })
@@ -38,6 +40,14 @@ function PendingBids() {
             }, 'scrolling')
         }
     }, [pageNum]);
+
+    useEffect(() => {
+        setTotalPages(0)
+        setPageNum(1)
+        fetchProducts({
+            ...searchObject
+        })
+    }, [updateProducts])
 
     const observer = useRef(
         new IntersectionObserver(
@@ -156,8 +166,8 @@ function PendingBids() {
                                 <Item>
                                     <ProductsList title={'Pending Bids'} products={products}
                                         searchObject={searchObject}
-                                        handleFilterChange={handleFilterChange} 
-                                        categories={categories}/>
+                                        handleFilterChange={handleFilterChange}
+                                        categories={categories} />
                                     {
                                         !loading &&
                                             pageNum <= totalPages ? (

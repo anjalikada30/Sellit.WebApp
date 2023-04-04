@@ -5,6 +5,7 @@ import { Filter, Loader, NoBid, ProductsList, ScrollButton } from '../../compone
 import { ArrowBackIosNew } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 import userService from '../../services/user.service';
+import { useSelector } from 'react-redux';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -23,6 +24,7 @@ function AllBids() {
     const [searchObject, setSearchObject] = useState({});
     const [lastElement, setLastElement] = useState(null);
     const [categories, setCategories] = useState([])
+    const { updateProducts } = useSelector(state => state.app);
 
     useEffect(() => {
         fetchProducts({})
@@ -38,6 +40,14 @@ function AllBids() {
         }
     }, [pageNum]);
 
+    useEffect(() => {
+        setTotalPages(0)
+        setPageNum(1)
+        fetchProducts({
+            ...searchObject
+        })
+    }, [updateProducts])
+    
     const observer = useRef(
         new IntersectionObserver(
             (entries) => {

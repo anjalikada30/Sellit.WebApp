@@ -15,10 +15,8 @@ const getAllProducts = () => {
 };
 
 const getAllProductsForHome = async () => {
-  if (!homeProducts) {
-    const response = await axios.get(API_URL + "users/products", { headers: authHeader() });
-    homeProducts = [...response?.data?.response?.products?.results]
-  }
+  const response = await axios.get(API_URL + "users/products", { headers: authHeader() });
+  homeProducts = [...response?.data?.response?.products?.results]
   return Promise.resolve(homeProducts)
 };
 

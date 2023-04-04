@@ -94,7 +94,7 @@ const ProductListItem = ({ data, margin, backRoute, categories }) => {
                             Order status: {OrderStatus[data.orderStatus]}
                         </Typography>
                         {
-                            data.orderStatus === 1 ?
+                            data.bidStatus !== 2 ?
                                 <Typography variant="subtitle1" component="div" sx={{ fontSize: '0.8rem' }}>
                                     Last modified: {moment(data.updatedAt).format('DD/MM/yyyy, h:mm:ss a')}
                                 </Typography> : null
