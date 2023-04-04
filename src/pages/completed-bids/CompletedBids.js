@@ -71,7 +71,7 @@ function CompletedBids() {
         const response = await userService.getCategories();
         setCategories(response)
     }
-    
+
     const fetchProducts = async (data, scrolling) => {
         setLoading(true)
         try {
@@ -183,8 +183,8 @@ function CompletedBids() {
                                 <Item>
                                     <ProductsList title={'Accepted Bids'} products={products}
                                         searchObject={searchObject}
-                                        handleFilterChange={handleFilterChange} 
-                                        categories={categories}/>
+                                        handleFilterChange={handleFilterChange}
+                                        categories={categories} />
                                     {
                                         !loading &&
                                             pageNum <= totalPages ? (
@@ -194,8 +194,10 @@ function CompletedBids() {
                                     }
                                 </Item>
                             </Grid>
-                            : <NoBid title={'No products found.'} />
+                            : null
                     }
+                    {!loading && !products?.results?.length ?
+                        <NoBid title={'No products found.'} /> : null}
                 </Grid>
                 <ScrollButton />
             </Box>

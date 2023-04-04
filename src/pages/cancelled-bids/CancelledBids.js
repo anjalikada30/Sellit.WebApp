@@ -158,8 +158,8 @@ function CancelledBids() {
                                 <Item>
                                     <ProductsList title={'Rejected Bids'} products={products}
                                         searchObject={searchObject}
-                                        handleFilterChange={handleFilterChange} 
-                                        categories={categories}/>
+                                        handleFilterChange={handleFilterChange}
+                                        categories={categories} />
                                     {
                                         !loading &&
                                             pageNum <= totalPages ? (
@@ -169,8 +169,10 @@ function CancelledBids() {
                                     }
                                 </Item>
                             </Grid>
-                            : <NoBid title={'No products found.'} />
+                            : null
                     }
+                    {!loading && !products?.results?.length ?
+                        <NoBid title={'No products found.'} /> : null}
                 </Grid>
                 <ScrollButton />
             </Box>

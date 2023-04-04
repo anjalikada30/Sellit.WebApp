@@ -177,8 +177,10 @@ function PendingBids() {
                                     }
                                 </Item>
                             </Grid>
-                            : <NoBid title={'No products found.'} />
+                            : null
                     }
+                    {!loading && !products?.results?.length ?
+                        <NoBid title={'No products found.'} /> : null}
                 </Grid>
                 <ScrollButton />
             </Box>

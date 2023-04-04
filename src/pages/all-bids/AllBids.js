@@ -47,7 +47,7 @@ function AllBids() {
             ...searchObject
         })
     }, [updateProducts])
-    
+
     const observer = useRef(
         new IntersectionObserver(
             (entries) => {
@@ -176,8 +176,10 @@ function AllBids() {
                                     }
                                 </Item>
                             </Grid>
-                            : <NoBid title={'No products found.'} />
+                            : null
                     }
+                    {!loading && !products?.results?.length ?
+                        <NoBid title={'No products found.'} /> : null}
                 </Grid>
                 <ScrollButton />
             </Box>

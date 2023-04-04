@@ -82,54 +82,57 @@ const Home = () => {
                 p: 1,
                 margin: 2
             }}>
-                {
-                    products.length ?
-                        <>
-                            <Box sx={{
-                                flexGrow: 1,
-                                p: 1,
-                                display: { xs: 'none', sm: 'block', md: 'block' }
-                            }}>
+                <>
+                    {
+                        products.length ?
+                            <>
+                                <Box sx={{
+                                    flexGrow: 1,
+                                    p: 1,
+                                    display: { xs: 'none', sm: 'block', md: 'block' }
+                                }}>
 
-                                <Typography variant='h6' sx={{ mb: 2 }}>Latest Bid</Typography>
-                                {/* <Paper elevation={2} style={paperStyle} > */}
-                                <ProductListItem data={products[0]}
-                                    margin={1}
-                                    backRoute={"/home"}
-                                    categories={categories} />
-                                {/* </Paper> */}
-                            </Box>
-                            <Typography variant='h6' sx={{ mt: 1 }}>All Bids</Typography>
-                            <Grid container spacing={2} sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}
-                            >
-                                <Grid item xs={12} sm={6} md={5}>
-                                    <Item>
-                                        <BidCard name="All Bids" logo={allBidsLogo} link="/all-bids" />
-                                    </Item>
+                                    <Typography variant='h6' sx={{ mb: 2 }}>Latest Bid</Typography>
+                                    {/* <Paper elevation={2} style={paperStyle} > */}
+                                    <ProductListItem data={products[0]}
+                                        margin={1}
+                                        backRoute={"/home"}
+                                        categories={categories} />
+                                    {/* </Paper> */}
+                                </Box>
+                                <Typography variant='h6' sx={{ mt: 1 }}>All Bids</Typography>
+                                <Grid container spacing={2} sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
+                                >
+                                    <Grid item xs={12} sm={6} md={5}>
+                                        <Item>
+                                            <BidCard name="All Bids" logo={allBidsLogo} link="/all-bids" />
+                                        </Item>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={5}>
+                                        <Item>
+                                            <BidCard name="Pending Bids" logo={pendingLogo} link="/pending-bids" />
+                                        </Item>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={5}>
+                                        <Item>
+                                            <BidCard name="Accepted Bids" logo={completedLogo} link="/completed-bids" />
+                                        </Item>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={5}>
+                                        <Item>
+                                            <BidCard name="Rejected Bids" logo={cancelledLogo} link="/cancelled-bids" />
+                                        </Item>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12} sm={6} md={5}>
-                                    <Item>
-                                        <BidCard name="Pending Bids" logo={pendingLogo} link="/pending-bids" />
-                                    </Item>
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={5}>
-                                    <Item>
-                                        <BidCard name="Accepted Bids" logo={completedLogo} link="/completed-bids" />
-                                    </Item>
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={5}>
-                                    <Item>
-                                        <BidCard name="Rejected Bids" logo={cancelledLogo} link="/cancelled-bids" />
-                                    </Item>
-                                </Grid>
-                            </Grid>
-                        </> :
-                        <NoBid title={'No products found.'} />
-                }
+                            </> : null
+                    }
+                    {!loading && !products.length ?
+                        <NoBid title={'No products found.'} /> : null}
+                </>
             </Box>
             {
                 loading ?
