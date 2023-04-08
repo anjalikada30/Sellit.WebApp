@@ -22,6 +22,7 @@ import { SellProduct } from '../sell-product';
 import './header.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/actions/auth';
+import { Notifications } from '../notifications';
 
 const pages = [
   {
@@ -58,6 +59,7 @@ function Header() {
   const [value, setValue] = React.useState(0);
   const [openSellModal, setOpenSellModal] = React.useState(false)
   const [snackDetails, setSnackDetails] = React.useState({})
+  const [showNotifications, setShowNotifications] = React.useState(false)
   const { isLoggedIn } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
@@ -94,6 +96,12 @@ function Header() {
     }
 
     setSnackDetails({});
+  };
+  const handleOpenNotifications = (event) => {
+    setShowNotifications(event.currentTarget);
+  }
+  const handleCloseNotifications = () => {
+    setShowNotifications(null);
   };
   return (
     <>
@@ -147,7 +155,7 @@ function Header() {
             <Box
               component="img"
               sx={{
-                height: 40,
+                height: 35,
               }}
               alt="sell-it"
               src={logo}
@@ -166,15 +174,28 @@ function Header() {
                       ))}
                     </Tabs>
                   </Box>
-                  <Button variant="contained" startIcon={<AddIcon />} sx={{ margin: 2 }} onClick={() => setOpenSellModal(true)}>
+                  <Button variant="contained"
+                    startIcon={<AddIcon />}
+                    sx={{
+                      margin: 2,
+                      display: { xs: 'none', sm: 'flex' }
+                    }}
+                    onClick={() => setOpenSellModal(true)}>
                     Sell
                   </Button>
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, marginRight: 2 }}>
+                  <IconButton
+                    size="small"
+                    onClick={() => setOpenSellModal(true)}
+                    sx={{ display: { xs: 'flex', sm: 'none' }, backgroundColor: '#1976d2' }}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                  <IconButton onClick={handleOpenNotifications} sx={{ p: 0, marginRight: 1 }}>
                     <NotificationsNoneIcon sx={{ fontSize: 25 }} />
                   </IconButton>
                   <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="Open settings">
-                      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, marginRight: 2 }}>
+                      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, marginRight: { xs: 0.5, sm: 1 } }}>
                         <AccountCircleIcon sx={{ fontSize: 35 }} />
                       </IconButton>
                     </Tooltip>
@@ -213,6 +234,11 @@ function Header() {
         openSellModal ?
           <SellProduct handleClose={handleSellModalClose} />
           : null
+      }
+      {
+        showNotifications ?
+          <Notifications anchorEl={showNotifications}
+            handleClose={handleCloseNotifications} /> : null
       }
       <Snackbar open={snackDetails.show}
         autoHideDuration={6000}
