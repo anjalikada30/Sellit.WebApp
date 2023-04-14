@@ -45,13 +45,13 @@ const ProductDetails = () => {
     const fetchProductDetails = async () => {
         setLoading(true)
         try {
-        const id = window.location.href.split('/')[4]
-        const response = await userService.getProductDetails(id)
-        setLoading(false)
-        setProductdetails(response?.data?.response?.product)
-        if (response?.data?.response?.product?.bidStatus !== 2)
-            updateBidStepperDetails(response?.data?.response?.product)
-        else updateacceptedStepperDetails(response?.data?.response?.product)
+            const id = window.location.href.split('/')[4]
+            const response = await userService.getProductDetails(id)
+            setLoading(false)
+            setProductdetails(response?.data?.response?.product)
+            if (response?.data?.response?.product?.bidStatus !== 2)
+                updateBidStepperDetails(response?.data?.response?.product)
+            else updateacceptedStepperDetails(response?.data?.response?.product)
         }
         catch (err) {
             setLoading(false)
@@ -99,7 +99,6 @@ const ProductDetails = () => {
         } else {
             let bids = [...details.bidHistory];
             bids.reverse();
-            console.log(bids)
             bids.map(bid => {
                 if (bid.bidCreatedBy !== userId) {
                     steps.push({
@@ -161,7 +160,6 @@ const ProductDetails = () => {
             activeStep: details.orderStatus
         })
     }
-    console.log(acceptedStepperDetails)
     const handleEditProduct = () => {
         setOpenSellModal(true)
     }
@@ -186,7 +184,7 @@ const ProductDetails = () => {
                     pl: "1vw"
                 }}>
                     <Grid item>
-                        <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={backRoute}>
+                        <Button variant="outlined" startIcon={<ArrowBackIosNew />} component={Link} to={backRoute ? backRoute : '/home'}>
                             Back
                         </Button>
                     </Grid>
@@ -223,12 +221,21 @@ const ProductDetails = () => {
                 <Box sx={{ width: '100%', m: 2 }}>
                     {
                         productdetails.bidStatus !== 2 ?
-                            <HorizontalStepper steps={bidStepperDetails.steps}
-                                activeStep={bidStepperDetails.activeStep} /> :
+                            <>
+                                {
+                                    bidStepperDetails.steps.length < 7 ?
+                                        <HorizontalStepper steps={bidStepperDetails.steps}
+                                            activeStep={bidStepperDetails.activeStep} /> : null
+                                }
+                                {
+                                    bidStepperDetails.steps.length > 7 ?
+                                        <VerticalStepper steps={bidStepperDetails.steps}
+                                            activeStep={bidStepperDetails.activeStep} /> : null
+                                }
+                            </> :
                             <HorizontalStepper steps={acceptedStepperDetails.steps}
                                 activeStep={acceptedStepperDetails.activeStep} />
                     }
-                    {/* <VerticalStepper steps={steps} /> */}
                 </Box>
             </Box>
             {

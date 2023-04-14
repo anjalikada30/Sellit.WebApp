@@ -81,7 +81,7 @@ const ProductListItem = ({ data, margin, backRoute, categories }) => {
                         </Grid>
                     </Grid>
                     <Grid item xs container direction="column" spacing={2} sx={{ mt: 1 }}>
-                        <Button variant="outlined" color={ProductBidColor[data.bidStatus]}
+                        <Button variant="text" color={ProductBidColor[data.bidStatus]}
                             sx={{ m: 1, cursor: 'default', width: '120px' }}>
                             {ProductBidStatus[data.bidStatus]}</Button>
                         {
@@ -90,9 +90,12 @@ const ProductListItem = ({ data, margin, backRoute, categories }) => {
                                     Accepted amount: {data.acceptedAmount}
                                 </Typography> : null
                         }
-                        <Typography variant="subtitle1" component="div" sx={{ fontSize: '0.8rem' }}>
-                            Order status: {OrderStatus[data.orderStatus]}
-                        </Typography>
+                        {
+                            data.bidStatus !== 3 ?
+                                <Typography variant="subtitle1" component="div" sx={{ fontSize: '0.8rem' }}>
+                                    Order status: {OrderStatus[data.orderStatus]}
+                                </Typography> : null
+                        }
                         {
                             data.bidStatus !== 2 ?
                                 <Typography variant="subtitle1" component="div" sx={{ fontSize: '0.8rem' }}>

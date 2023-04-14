@@ -21,9 +21,9 @@ const register = (data) => {
     })
 };
 
-const login = ({ mobile, password }) => {
+const login = (data) => {
   return axios
-    .post(API_URL + "login", { mobile, password })
+    .post(API_URL + "login", data)
     .then((response) => {
       if (response?.data?.response?.tokens?.accessToken) {
         localStorage.setItem("user", JSON.stringify(response.data.response));

@@ -43,18 +43,19 @@ export const register = (data) => (dispatch) => {
   );
 };
 
-export const login = ({mobile, password}) => (dispatch) => {
+export const login = (data) => (dispatch) => {
   dispatch({
     type: CLEAR_MESSAGE
   });
-  return AuthService.login({mobile, password}).then(
+  return AuthService.login(data).then(
     (response) => {
       if (response.status === SUCCESS_RESPONSE) {
         dispatch({
           type: LOGIN_SUCCESS,
           payload: {
             userId: response.data.user._id,
-            mobile: mobile,
+            mobile: data.mobile,
+            email: data.email,
             user: response.data.user
           },
         });

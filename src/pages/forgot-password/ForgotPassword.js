@@ -20,6 +20,8 @@ const ForgotPassword = () => {
     const [showResetPassword, setShowResetPassword] = useState(false)
     const [showSuccess, setShowSuccess] = useState(false)
     const isPhone = /^[5-9]\d{9}$/gi;
+    const numberregex = /^[0-9]+$/i;
+    const emailregex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
     let navigate = useNavigate();
     const dispatch = useDispatch();
@@ -32,15 +34,17 @@ const ForgotPassword = () => {
                     ...validationErrors,
                     mobile: "This field is required."
                 }
-            } else if (!isPhone.test(value)) {
-                errors = {
-                    ...validationErrors,
-                    mobile: "Please enter a valid phone number."
-                }
             } else {
-                errors = {
-                    ...validationErrors,
-                    mobile: null
+                if (!numberregex.test(value))
+                    errors = {
+                        ...validationErrors,
+                        mobile: !emailregex.test(value) ? 'Please enter valid email address' : false
+                    }
+                else {
+                    errors = {
+                        ...validationErrors,
+                        mobile: !isPhone.test(value) ? 'Please enter valid phone number' : false
+                    }
                 }
             }
         } else if (name === 'password') {
@@ -121,11 +125,13 @@ const ForgotPassword = () => {
     const handleMobileSubmit = async (event) => {
         event.preventDefault();
         if (user.mobile) {
+            const data = {}
+            if (numberregex.test(user.mobile))
+                data.mobile = user.mobile
+            else data.email = user.mobile
             setLoading(true)
             try {
-                const response = await userService.forgotPassword({
-                    mobile: user.mobile
-                })
+                const response = await userService.forgotPassword(data)
                 setLoading(false)
                 setShowResetPassword(true)
                 setUser({

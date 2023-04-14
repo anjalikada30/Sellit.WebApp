@@ -8,14 +8,14 @@ const NewPassword = ({ user, handleChange, errors, handleSubmit, message }) => {
         <>
             <Grid>
                 <Paper elevation={10} style={paperStyle}>
-                    <Grid align='center'>
+                    <Grid align='center' mb={2}>
                         <h3>Forgot Password</h3>
                         <h4 style={{ color: "green" }}></h4>
                     </Grid>
 
                     <form onSubmit={handleSubmit} noValidate>
                         <TextField
-                            label="Enter mobile number"
+                            label="Enter email/mobile number"
                             onChange={handleChange}
                             variant="outlined"
                             name="mobile"

@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Alert, Snackbar, Tab, Tabs } from '@mui/material';
+import { Alert, Badge, Snackbar, Tab, Tabs } from '@mui/material';
 import logo from '../../assets/logo2.png';
 import { Link } from "react-router-dom";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -23,6 +23,7 @@ import './header.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/actions/auth';
 import { Notifications } from '../notifications';
+import userService from '../../services/user.service';
 
 const pages = [
   {
@@ -60,8 +61,58 @@ function Header() {
   const [openSellModal, setOpenSellModal] = React.useState(false)
   const [snackDetails, setSnackDetails] = React.useState({})
   const [showNotifications, setShowNotifications] = React.useState(false)
+  const [unReadNotificationCount, setUnReadNotificationCount] = React.useState(0);
+  const [notifications, setNotifications] = React.useState([]);
+  const [page, setPage] = React.useState(1);
   const { isLoggedIn } = useSelector(state => state.auth);
   const dispatch = useDispatch();
+  const open = Boolean(showNotifications);
+  const id = open ? 'simple-popover' : undefined;
+
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      userService.getNotificationsUnReadCount()
+        .then((res) => {
+          console.log(res)
+          setUnReadNotificationCount(res.data?.response?.unreadCount);
+        })
+        .catch((err) => console.log(err));
+      userService.getAllNotifications(page)
+        .then((res) => {
+          console.log(res)
+          setNotifications(res.data?.message?.results);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [isLoggedIn]);
+
+  const closeNotification = (id) => {
+    userService.deleteNotificationById(id)
+      .then((res) => {
+        // toast.success("Notification removed");
+        setNotifications((old) => old.filter((item) => item._id !== id));
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const removeAllNotifications = () => {
+    userService.deleteAllNotifications()
+      .then((res) => {
+        // toast.success("Removed all");
+        setNotifications([]);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const showMoreNotifications = () => {
+    userService.getAllNotifications(page + 1)
+      .then((res) => {
+        const notificationsList = res.data?.message?.results;
+        setNotifications((old) => [...old, ...notificationsList]);
+        setPage((old) => old + 1);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -190,10 +241,24 @@ function Header() {
                   >
                     <AddIcon />
                   </IconButton>
-                  <IconButton onClick={handleOpenNotifications} sx={{ p: 0, marginRight: 1 }}>
-                    <NotificationsNoneIcon sx={{ fontSize: 25 }} />
-                  </IconButton>
-                  <Box sx={{ flexGrow: 0 }}>
+                  <Badge
+                    badgeContent={unReadNotificationCount}
+                    sx={{
+                      fontSize: 6,
+                    }}
+                    color="primary"
+                  >
+                    <NotificationsNoneIcon
+                      sx={{
+                        cursor: "pointer",
+                      }}
+                      color="action"
+                      aria-describedby={id}
+                      variant="contained"
+                      onClick={handleOpenNotifications}
+                    />
+                  </Badge>
+                  <Box sx={{ flexGrow: 0, ml: 1 }}>
                     <Tooltip title="Open settings">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, marginRight: { xs: 0.5, sm: 1 } }}>
                         <AccountCircleIcon sx={{ fontSize: 35 }} />
@@ -238,7 +303,11 @@ function Header() {
       {
         showNotifications ?
           <Notifications anchorEl={showNotifications}
-            handleClose={handleCloseNotifications} /> : null
+            handleClose={handleCloseNotifications}
+            closeNotification={closeNotification}
+            removeAllNotifications={removeAllNotifications}
+            notifications={notifications}
+            showMoreNotifications={showMoreNotifications} /> : null
       }
       <Snackbar open={snackDetails.show}
         autoHideDuration={6000}

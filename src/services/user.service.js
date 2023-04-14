@@ -1,3 +1,4 @@
+import api from './api';
 import axios from "axios";
 import authHeader from "./auth-header";
 
@@ -7,15 +8,15 @@ let categories = null;
 let homeProducts = null;
 
 const uploadImage = (data) => {
-  return axios.post(API_URL + "users/image", data, { headers: authHeader() });
+  return api.post("/users/image", data);
 };
 
 const getAllProducts = () => {
-  return axios.get(API_URL + "users/products", { headers: authHeader() });
+  return api.get("/users/products");
 };
 
 const getAllProductsForHome = async () => {
-  const response = await axios.get(API_URL + "users/products", { headers: authHeader() });
+  const response = await api.get("/users/products");
   homeProducts = [...response?.data?.response?.products?.results]
   return Promise.resolve(homeProducts)
 };
@@ -26,7 +27,7 @@ const getProducts = (data) => {
     if (data[item])
       query = query + `&${item}=${data[item]}`
   })
-  return axios.get(API_URL + "users/products" + query, { headers: authHeader() });
+  return api.get("/users/products"+ query);
 };
 
 const getCategories = async () => {
@@ -85,6 +86,26 @@ const updatePassword = (data) => {
   return axios.put(API_URL + "users/update-password", data, { headers: authHeader() })
 }
 
+const getAllNotifications = async (page) => {
+  const response = await axios.get(API_URL + `/users/notifications?page=${page}`, { headers: authHeader() });
+  return response;
+};
+
+const getNotificationsUnReadCount = async () => {
+  const response = await axios.get(API_URL + `/users/notifications/unread/count`, { headers: authHeader() });
+  return response;
+};
+
+const deleteAllNotifications = async (body) => {
+  const response = await axios.delete(API_URL + `/users/notifications`, { headers: authHeader() });
+  return response;
+};
+
+const deleteNotificationById = async (id) => {
+  const response = await axios.get(API_URL + `/users/notifications/${id}`, { headers: authHeader() });
+  return response;
+};
+
 export default {
   uploadImage,
   getAllProducts,
@@ -102,5 +123,9 @@ export default {
   editBankDetails,
   editMobileDetails,
   verifyMobileOtp,
-  updatePassword
+  updatePassword,
+  getAllNotifications,
+  getNotificationsUnReadCount,
+  deleteAllNotifications,
+  deleteNotificationById
 };

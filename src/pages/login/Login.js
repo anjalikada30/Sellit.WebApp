@@ -56,6 +56,8 @@ function Login() {
     const { message } = useSelector(state => state.message);
     const dispatch = useDispatch();
     const mobileregex = /^[5-9]\d{9}$/gi;
+    const numberregex = /^[0-9]+$/i;
+    const emailregex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -67,9 +69,14 @@ function Login() {
 
     const handleChange = event => {
         if (event.target.name === 'mobile')
-            setError({
+            if (!numberregex.test(event.target.value))
+                setError({
+                    ...error,
+                    mobile: !emailregex.test(event.target.value) ? 'Please enter valid email address' : false
+                })
+            else setError({
                 ...error,
-                mobile: !mobileregex.test(event.target.value)
+                mobile: !mobileregex.test(event.target.value) ? 'Please enter valid phone number' : false
             })
         else if (event.target.name === 'password')
             setError({
@@ -82,8 +89,14 @@ function Login() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (!error.mobile && !error.password) {
+            const data = {
+                password: values.password
+            }
+            if (numberregex.test(values.mobile))
+                data.mobile = values.mobile
+            else data.email = values.mobile
             setLoading(true)
-            dispatch(login(values))
+            dispatch(login(data))
                 .then(() => {
                     console.log('login success')
                     setLoading(false)
@@ -210,7 +223,7 @@ function Login() {
                                 <TextField
                                     margin="normal"
                                     required
-                                    label="Phone Number"
+                                    label="Email/Phone Number"
                                     onChange={handleChange}
                                     variant="outlined"
                                     name="mobile"
@@ -218,7 +231,7 @@ function Login() {
                                     type="text"
                                     fullWidth
                                     value={values.mobile}
-                                    helperText={error.mobile ? "Please enter valid phone number" : ""}
+                                    helperText={error.mobile ? error.mobile : ""}
                                     error={error.mobile}
                                 />
                                 <TextField
