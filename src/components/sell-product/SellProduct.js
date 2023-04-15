@@ -223,6 +223,7 @@ const SellProduct = ({ handleClose, action, details }) => {
       formData.append('files', file)
     }
     setLoading(true)
+    console.log('formData-', formData)
     try {
       const response = await userService.uploadImage(formData)
       const imageuris = response?.data?.response?.files.map((file) => url + file.key);

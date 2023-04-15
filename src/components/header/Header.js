@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/actions/auth';
 import { Notifications } from '../notifications';
 import userService from '../../services/user.service';
+import TokenService from '../../services/token.service';
 
 const pages = [
   {
@@ -73,13 +74,11 @@ function Header() {
     if (isLoggedIn) {
       userService.getNotificationsUnReadCount()
         .then((res) => {
-          console.log(res)
           setUnReadNotificationCount(res.data?.response?.unreadCount);
         })
         .catch((err) => console.log(err));
       userService.getAllNotifications(page)
         .then((res) => {
-          console.log(res)
           setNotifications(res.data?.message?.results);
         })
         .catch((err) => console.log(err));
@@ -160,7 +159,7 @@ function Header() {
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             {
-              isLoggedIn ?
+              TokenService.getLocalAccessToken() ?
                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                   <IconButton
                     size="large"
@@ -212,7 +211,7 @@ function Header() {
               src={logo}
             />
             {
-              isLoggedIn ?
+              TokenService.getLocalAccessToken() ?
                 <>
                   <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                     <Tabs sx={{ marginLeft: "25vw", color: "black" }}

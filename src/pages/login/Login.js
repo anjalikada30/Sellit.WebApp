@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import image1 from '../../assets/image1.png';
 import image2 from '../../assets/image2.png';
-import image3 from '../../assets/image3.png';
-import image4 from '../../assets/image4.png';
+import image3 from '../../assets/image3L.jpg';
+import image4 from '../../assets/image4L.jpg';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -16,6 +16,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { login } from '../../store/actions/auth'
+import { Home } from '../home'
 
 const images = [
     {
@@ -110,169 +111,91 @@ function Login() {
 
     return (
         <>
-            {/* <div className='page-container'>
-                <Grid container
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="center"
-                    style={{ minHeight: '88vh' }}>
-                    <Grid item md={4} display={{ xs: "none", lg: "block", md: "block" }} >
-                        <Item><SwipeableTextMobileCarousel images={images} /></Item>
-                    </Grid>
-                    <Grid item xs={11} sm={6} md={3}>
-                        <Item>
-                            <Box
-                                sx={{
-                                    marginTop: 2,
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Avatar sx={{ m: 1, bgcolor: 'secondary' }}>
-                                    <LockOutlinedIcon />
-                                </Avatar>
-                                <Typography component="h6" variant="h6">
-                                    Sign in
-                                </Typography>
-                                {
-                                    message ?
-                                        <Alert severity="error">
-                                            {message}
-                                        </Alert> : null
-                                }
-                                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        label="Phone Number"
-                                        onChange={handleChange}
-                                        variant="outlined"
-                                        inputProps={{ maxLength: 4 }}
-                                        name="mobile"
-                                        size="small"
-                                        type="text"
-                                        fullWidth
-                                        value={values.mobile}
-                                        helperText={error.mobile ? "Please enter valid phone number" : ""}
-                                        error={error.mobile}
-                                    />
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        id="password"
-                                        label="Password"
-                                        name="password"
-                                        autoComplete="password"
-                                        size='small'
-                                        value={values.password}
-                                        onChange={handleChange}
-                                        helperText={error.password ? "This field is required" : ""}
-                                        error={error.password}
-                                    />
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        variant="contained"
-                                        sx={{ mt: 3, mb: 2 }}
-                                    >
-                                        Send otp
-                                    </Button>
+            {
+                isLoggedIn ?
+                    <Home /> :
+                    <div className='page-container'>
+                        <Grid container
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                            style={{ minHeight: '88vh' }}>
+                            <Grid item md={4} display={{ xs: "none", lg: "block", md: "block" }} >
+                                <Paper style={paperStyle}>
+                                    <SwipeableTextMobileCarousel images={images} />
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={11} sm={6} md={3} >
+                                <Paper style={paperStyle}>
+                                    <Grid item align='center'>
+                                        <Avatar sx={{ m: 1, bgcolor: 'secondary' }}>
+                                            <LockOutlinedIcon />
+                                        </Avatar>
+                                        <Typography component="h6" variant="h6">
+                                            Sign in
+                                        </Typography>
+                                    </Grid>
+                                    {
+                                        message ?
+                                            <Alert severity="error">
+                                                {message}
+                                            </Alert> : null
+                                    }
+                                    <form onSubmit={handleSubmit} noValidate>
+                                        <TextField
+                                            margin="normal"
+                                            required
+                                            label="Email/Phone Number"
+                                            onChange={handleChange}
+                                            variant="outlined"
+                                            name="mobile"
+                                            size="small"
+                                            type="text"
+                                            fullWidth
+                                            value={values.mobile}
+                                            helperText={error.mobile ? error.mobile : ""}
+                                            error={error.mobile}
+                                        />
+                                        <TextField
+                                            margin="normal"
+                                            required
+                                            fullWidth
+                                            id="password"
+                                            label="Password"
+                                            name="password"
+                                            type='password'
+                                            autoComplete="password"
+                                            size='small'
+                                            value={values.password}
+                                            onChange={handleChange}
+                                            helperText={error.password ? (!values.password ? "This field is required"
+                                                : "Password must be atleast 6 characters") : ""}
+                                            error={error.password}
+                                        />
+                                        <Link to="/forgot-password">
+                                            {"Forgot Password"}
+                                        </Link>
+                                        <Button
+                                            type="submit"
+                                            fullWidth
+                                            variant="contained"
+                                            sx={{ mt: 3, mb: 2 }}
+                                        >
+                                            Sign in
+                                        </Button>
+                                    </form>
                                     <Grid container>
                                         <Grid item>
-                                            <Link href="/sign-up" variant="body2">
+                                            <Link to="/sign-up">
                                                 {"Don't have an account? Sign Up"}
                                             </Link>
                                         </Grid>
                                     </Grid>
-                                </Box>
-                            </Box>
-                        </Item>
-                    </Grid>
-                </Grid>
-            </div> */}
-            <div className='page-container'>
-                <Grid container
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="center"
-                    style={{ minHeight: '88vh' }}>
-                    <Grid item md={4} display={{ xs: "none", lg: "block", md: "block" }} >
-                        <Paper style={paperStyle}>
-                            <SwipeableTextMobileCarousel images={images} />
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={11} sm={6} md={3} >
-                        <Paper style={paperStyle}>
-                            <Grid item align='center'>
-                                <Avatar sx={{ m: 1, bgcolor: 'secondary' }}>
-                                    <LockOutlinedIcon />
-                                </Avatar>
-                                <Typography component="h6" variant="h6">
-                                    Sign in
-                                </Typography>
+                                </Paper>
                             </Grid>
-                            {
-                                message ?
-                                    <Alert severity="error">
-                                        {message}
-                                    </Alert> : null
-                            }
-                            <form onSubmit={handleSubmit} noValidate>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    label="Email/Phone Number"
-                                    onChange={handleChange}
-                                    variant="outlined"
-                                    name="mobile"
-                                    size="small"
-                                    type="text"
-                                    fullWidth
-                                    value={values.mobile}
-                                    helperText={error.mobile ? error.mobile : ""}
-                                    error={error.mobile}
-                                />
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    id="password"
-                                    label="Password"
-                                    name="password"
-                                    type='password'
-                                    autoComplete="password"
-                                    size='small'
-                                    value={values.password}
-                                    onChange={handleChange}
-                                    helperText={error.password ? (!values.password ? "This field is required"
-                                        : "Password must be atleast 6 characters") : ""}
-                                    error={error.password}
-                                />
-                                <Link to="/forgot-password">
-                                    {"Forgot Password"}
-                                </Link>
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    sx={{ mt: 3, mb: 2 }}
-                                >
-                                    Sign in
-                                </Button>
-                            </form>
-                            <Grid container>
-                                <Grid item>
-                                    <Link to="/sign-up">
-                                        {"Don't have an account? Sign Up"}
-                                    </Link>
-                                </Grid>
-                            </Grid>
-                        </Paper>
-                    </Grid>
-                </Grid>
-            </div>
+                        </Grid>
+                    </div>
+            }
             {
                 loading ?
                     <Loader /> : null

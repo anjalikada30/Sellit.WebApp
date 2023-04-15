@@ -8,7 +8,7 @@ let categories = null;
 let homeProducts = null;
 
 const uploadImage = (data) => {
-  return api.post("/users/image", data);
+  return axios.post(API_URL + "/users/image", data, { headers: authHeader() });
 };
 
 const getAllProducts = () => {
@@ -33,7 +33,7 @@ const getProducts = (data) => {
 const getCategories = async () => {
   if (!categories) {
     const response = await axios.get(API_URL + "products/categories", { headers: authHeader() });
-    categories = [...response.data.response.categories]
+    categories = response.data.response.categories.filter(category=>category.isActive)
   }
   return Promise.resolve(categories)
 };
